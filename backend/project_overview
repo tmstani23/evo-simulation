@@ -1,0 +1,92 @@
+Core Features to Implement
+
+    Creature Representation
+        Genetic Code: Encode creature traits as JSON objects, allowing for easy manipulation and storage of genetic information.
+        Neural Network: Implement a simple neural network library or custom neural networks to control creature behavior.
+
+    Environment
+        Map: Represent the environment as a grid or continuous space in React. This map will serve as the habitat for creatures, where they move, find food, and interact.
+        Food: Distribute food randomly within the environment. Creatures will need to find and consume food to survive.
+
+    Simulation Mechanics
+        Movement: Calculate creature movements based on outputs from their neural networks, allowing them to navigate the environment.
+        Health: Implement health management where creatures lose health over time and gain health by consuming food.
+        Mating and Offspring: Develop mechanisms for genetic crossover and mutation, allowing creatures to reproduce and pass on traits to offspring.
+
+    Genetic Algorithms
+        Selection: Select creatures based on fitness for reproduction. Fitness can be determined by factors such as health, age, and food consumption.
+        Crossover: Combine genetic codes of parent creatures to produce offspring with mixed traits.
+        Mutation: Introduce random changes in the genetic code to promote diversity and adaptation.
+
+    Neural Networks
+        Inputs/Outputs: Define neural network inputs (e.g., distance to food, presence of other creatures) and outputs (e.g., movement direction, speed).
+        Training: Use simple heuristics or evolutionary algorithms to train the neural networks, allowing creatures to learn and adapt their behaviors over generations.
+
+Current State of Development
+
+evo-simulation/
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── index.js
+│   ├── package.json
+├── evo-frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── App.js
+│   │   ├── index.js
+│   │   ├── setupProxy.js
+│   ├── package.json
+
+
+    Backend:
+        Set up using Express and body-parser to handle JSON payloads.
+        CORS enabled for development.
+        Routes:
+            GET /start: Initializes the simulation.
+            POST /update: Updates the simulation state and returns the current state of creatures and environment.
+
+    Frontend:
+        Initialized using Create React App.
+        Uses Axios to communicate with the backend.
+        Periodically sends POST /update requests to the backend to update the simulation state.
+        Configured with http-proxy-middleware to proxy API requests during development.
+
+    Middleware Configuration:
+        http-proxy-middleware is used to handle API requests from the React frontend to the Express backend during development. This setup avoids CORS issues and simplifies development by allowing the frontend to make API calls as if they are on the same domain.
+        In setupProxy.js, specific routes (/start and /update) are proxied to the backend server running on http://localhost:3000.
+
+Hybrid Approach Explanation
+
+In this project, we are adopting a hybrid approach where the core simulation logic runs on the frontend, while the backend is utilized for data persistence and retrieval. This strategy provides several benefits:
+
+    Responsiveness: Running the simulation on the frontend ensures immediate feedback to user interactions, enhancing the user experience.
+    Resource Utilization: Leveraging client-side resources reduces the load on the server, allowing it to handle multiple users more efficiently.
+    Scalability: Each user runs their simulation independently, allowing the application to scale effortlessly with the number of users.
+    Data Persistence: The backend is responsible for saving and loading the state of the simulation, ensuring that users can save their progress and resume it later. This includes saving the states of creatures and the environment.
+
+Next Steps
+
+    Feature Development:
+        Implement genetic algorithms and neural networks for creature behaviors.
+        Add functionality for creatures to locate food, mate, and evolve.
+
+    Testing and Debugging:
+        Write unit tests for frontend and backend components.
+        Debug and resolve issues related to state management and API communication.
+
+    Styling and UX Improvements:
+        Enhance UI with better styling and user interactions.
+        Use CSS frameworks or libraries for responsive design.
+
+    Production Deployment:
+        Configure the backend to serve the React build files.
+        Set up deployment scripts to automate the build and deployment process.
+        Consider hosting options like Heroku, AWS, or DigitalOcean.
+
+    Documentation:
+        Document the codebase and development process.
+        Create a README file with detailed instructions on setting up and running the project.
