@@ -1,0 +1,57 @@
+Current State
+
+    Mutation Functionality:
+        The mutation button mutates the genetic code of a selected creature.
+        Mutation logs show changes in the genetic code traits.
+
+    Crossover Functionality:
+        The crossover button combines genetic codes of two selected creatures to produce an offspring.
+        Mutation is applied to the offspring after the crossover.
+        Logs show the genetic codes of both parents, the offspring before mutation, and the offspring after mutation.
+
+Next Steps
+
+Here are some potential next steps to continue building your simulation:
+
+    Health and Survival Mechanics:
+        Implement health management where creatures lose health over time and gain health by consuming food.
+
+    Environment Interaction:
+        Develop the environment where creatures interact, move, and find food.
+
+    Movement Mechanics:
+        Implement movement mechanics based on outputs from the neural network.
+
+    UI Enhancements:
+        Improve the UI for better visualization and interaction with the simulation.
+
+    Testing and Debugging:
+        Continue testing the mutation and crossover functionalities to ensure they work correctly.
+        Debug any issues that arise during the simulation.
+
+Detailed Steps for Next Features
+Health and Survival Mechanics
+
+    Health Management:
+        Creatures lose health over time.
+        Creatures gain health by consuming food.
+
+    Implement Food Objects:
+        Add food objects to the environment that creatures can consume to restore health.
+
+Environment Interaction
+
+    Create an Environment Grid:
+        Create a grid-based environment where creatures can move and interact with food objects.
+
+    Implement Movement Logic:
+        Allow creatures to move around the grid and find food.
+
+UI Enhancements
+
+    Visualization:
+        Add visual elements to represent creatures and food in the environment.
+        Use color coding or icons to distinguish between different creatures and food items.
+
+    Interactions:
+        Provide interactive elements for users to control the simulation (e.g., start, stop, reset).
