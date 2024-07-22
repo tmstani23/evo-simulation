@@ -1,0 +1,11 @@
+/* src/components/GridContainer.css */
+
+.grid-container {
+    width: 800px; /* Fixed width for the grid container */
+    height: 600px; /* Fixed height for the grid container */
+    position: relative; /* Ensure child elements are positioned within this container */
+    background-color: #f0f0f0; /* Light grey background color */
+    border: 1px solid #ccc; /* Light grey border */
+    overflow: hidden; /* Prevent overflow */
+  }
+  

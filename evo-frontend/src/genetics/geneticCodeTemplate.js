@@ -7,7 +7,7 @@ import { geneticVariables } from './geneticVariables';
 export const generateGeneticCode = (variables) => {
   return {
     id: generateUniqueId(),
-    health: Math.floor(Math.random() * (variables.health.max - variables.health.min + 1)) + variables.health.min,
+    health: Math.floor(Math.random() * (variables.health.max - variables.health.min + 1)) + variables.health.min, // Initialize health
     velocity: {
       speed: Math.random() * (variables.speed.max - variables.speed.min) + variables.speed.min,
       direction: Math.random() * (variables.direction.max - variables.direction.min) + variables.direction.min,
@@ -15,9 +15,12 @@ export const generateGeneticCode = (variables) => {
     vision: Math.random() * (variables.vision.max - variables.vision.min) + variables.vision.min,
     strength: Math.random() * (variables.strength.max - variables.strength.min) + variables.strength.min,
     lifespan: Math.floor(Math.random() * (variables.lifespan.max - variables.lifespan.min + 1)) + variables.lifespan.min,
-    neuralNetwork: [] // Placeholder for neural network weights
+    neuralNetwork: [], // Placeholder for neural network weights
+    x: Math.random() * 790, // Initialize random x-coordinate within grid width
+    y: Math.random() * 590  // Initialize random y-coordinate within grid height
   };
 };
+
 
 // Function to introduce random mutations in the genetic code
 export const mutateGeneticCode = (geneticCode, mutationRate) => {
