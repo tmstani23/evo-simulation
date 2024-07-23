@@ -5,7 +5,6 @@ export const geneticVariables = {
     direction: { min: 0, max: 360, default: 0 },
     vision: { min: 0, max: 10, default: 1 },
     strength: { min: 0, max: 10, default: 1 },
-    lifespan: { min: 50, max: 250, default: 100 },
-    mutationRate: 0.9 // Set mutation rate to 90% for testing
+    lifespan: { min: 50, max: 250, default: 100 }
   };
   

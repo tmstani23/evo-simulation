@@ -1,35 +1,30 @@
-Next Steps:
+    Implemented Health Gain from Food:
+        Added logic to detect when creatures are in proximity to food.
+        Implemented health gain for creatures consuming food.
+        Removed consumed food from the grid and respawned new food items.
 
-    Implement Health Gain from Food:
-        Detect proximity of creatures to food items.
-        Increase creature health upon consuming food.
-        Remove consumed food items and respawn new food in random locations.
+    Enhanced UI Controls:
+        Added buttons to start and stop the simulation.
+        Simplified the UI by removing unnecessary genetic variable sliders.
 
-    Reproduction Mechanics:
-        Develop logic for creatures to reproduce based on specific conditions.
-        Implement genetic crossover and mutation for offspring.
+    Created a Global Variables File:
+        Centralized main variables such as mutation rate, eating range, food health amount, etc., into a globalVariables.js file.
+        Updated App.js to use these global variables for better manageability and future adjustments.
 
-    Visual Enhancements:
-        Add visual indicators for creature health (e.g., size or color changes).
-        Enhance the visual representation of creatures and food items.
+Next Steps Outlined:
 
-    Optimize Performance:
-        Continue to optimize performance to ensure smooth simulation with a growing number of creatures.
-        Investigate and apply further optimization techniques as needed.
+    Enhance Creature Interaction:
+        Implement mating logic, genetic crossover, and mutation for offspring.
+        Develop a basic neural network structure for future creature behavior control.
 
-    Simulation Controls:
-        Implement controls to start, stop, and reset the simulation.
-        Add options for adjusting simulation speed and parameters.
+    Optimize Environment and Creature Behavior:
+        Refine movement algorithms and health management.
+        Improve decision-making strategies for finding and consuming food.
 
-Detailed Plan for Next Step: Implement Health Gain from Food
+    User Interface Enhancements:
+        Add control sliders for adjusting global variables dynamically.
+        Introduce visual indicators to represent creature attributes such as health and strength.
 
-Goal: Allow creatures to gain health when they consume food.
-
-Sub-tasks:
-
-    Detect Proximity to Food:
-        Check if a creature is near a food item.
-    Consume Food:
-        Remove the food item and increase the creature’s health.
-    Respawn Food:
-        Randomly place a new food item in the grid after consumption.
+    Simulation Control and Performance:
+        Implement start, stop, and reset functionalities.
+        Optimize performance to handle larger numbers of creatures and interactions smoothly.
