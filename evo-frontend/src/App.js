@@ -1,24 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { generateGeneticCode } from './genetics/geneticCodeTemplate';
+import { generateGeneticCode, attemptReproduction } from './genetics/geneticCodeTemplate';
 import { geneticVariables } from './genetics/geneticVariables';
-import globalVariables from './globalVariables'; // Import global variables
-import GridContainer from './components/GridContainer'; // Import the GridContainer component
+import globalVariables from './globalVariables';
+import Grid from './components/Grid';
+import './App.css'; // Import global CSS file
 
 const App = () => {
   const [geneticCodes, setGeneticCodes] = useState(Array.from({ length: globalVariables.creatureCount }, () => generateGeneticCode(geneticVariables)));
   const [foodItems, setFoodItems] = useState(Array.from({ length: globalVariables.initialFoodCount }, () => ({
-    x: Math.random() * 790, // Random x-coordinate
-    y: Math.random() * 590, // Random y-coordinate
+    x: Math.random() * 790,
+    y: Math.random() * 590,
   })));
-  const [isRunning, setIsRunning] = useState(false); // Simulation state
+  const [debugMode, setDebugMode] = useState(false); // Add debug mode state
   const geneticCodesRef = useRef(geneticCodes);
   const foodItemsRef = useRef(foodItems);
   const intervalRef = useRef(null);
+  const foodIntervalRef = useRef(null); // Interval for food respawn
 
-  const regenerateGeneticCodes = () => {
+  const toggleDebugMode = () => setDebugMode(!debugMode); // Toggle debug mode
+
+  const resetSimulation = () => {
     const newGeneticCodes = Array.from({ length: globalVariables.creatureCount }, () => generateGeneticCode(geneticVariables));
+    const newFoodItems = Array.from({ length: globalVariables.initialFoodCount }, () => ({
+      x: Math.random() * 790,
+      y: Math.random() * 590,
+    }));
     setGeneticCodes(newGeneticCodes);
+    setFoodItems(newFoodItems);
     geneticCodesRef.current = newGeneticCodes;
+    foodItemsRef.current = newFoodItems;
+    clearInterval(intervalRef.current); // Clear the simulation interval
+    clearInterval(foodIntervalRef.current); // Clear the food respawn interval
+    console.log("Simulation reset");
   };
 
   const calculateMovement = (creature) => {
@@ -34,71 +47,73 @@ const App = () => {
     const deltaX = speed * Math.cos(angle);
     const deltaY = speed * Math.sin(angle);
 
-    console.log('Movement deltas:', deltaX, deltaY);
     return { deltaX, deltaY };
   };
 
   const detectProximityToFood = (creature) => {
-    const eatingRange = globalVariables.eatingRange; // Use global variable
-    for (let i = 0; i < foodItemsRef.current.length; i++) {
-      const food = foodItemsRef.current[i];
+    const eatingRange = globalVariables.eatingRange;
+    let foodEaten = false;
+    const updatedFoodItems = foodItemsRef.current.filter((food, index) => {
       const distance = Math.sqrt((creature.x - food.x) ** 2 + (creature.y - food.y) ** 2);
       if (distance < eatingRange) {
-        // Creature eats the food
-        foodItemsRef.current.splice(i, 1); // Remove the food item
-        return globalVariables.foodHealthAmount; // Return health gain from eating food
+        console.log(`Creature ${creature.id} eating food at (${food.x}, ${food.y})`);
+        foodEaten = true;
+        return false; // Remove food item
       }
+      return true;
+    });
+
+    if (foodEaten) {
+      foodItemsRef.current = updatedFoodItems;
+      setFoodItems([...updatedFoodItems]);
+      console.log("Updated food items after consumption:", updatedFoodItems.length);
+      return globalVariables.foodHealthAmount;
     }
-    return 0; // No food eaten
+    return 0;
   };
 
   const respawnFood = () => {
-    const newFood = {
-      x: Math.random() * 790,
-      y: Math.random() * 590
-    };
-    foodItemsRef.current.push(newFood);
-    setFoodItems([...foodItemsRef.current]); // Update the state to trigger re-render
+    console.log("Respawning food");
+    for (let i = 0; i < globalVariables.foodRespawnRate; i++) {
+      const newFood = {
+        x: Math.random() * 790,
+        y: Math.random() * 590,
+      };
+      foodItemsRef.current.push(newFood);
+    }
+    setFoodItems([...foodItemsRef.current]);
+    console.log("Current food items:", foodItemsRef.current.length);
   };
 
   const startSimulation = () => {
-    setIsRunning(true);
-  };
-
-  const stopSimulation = () => {
-    setIsRunning(false);
-  };
-
-  useEffect(() => {
-    if (isRunning) {
-      intervalRef.current = setInterval(() => {
-        console.log('Updating genetic codes...');
-        const updatedCodes = geneticCodesRef.current.map((creature) => {
+    console.log("Starting simulation");
+    // Start the simulation interval
+    intervalRef.current = setInterval(() => {
+      setGeneticCodes((prevGeneticCodes) => {
+        const updatedCodes = prevGeneticCodes.map((creature) => {
           let { deltaX, deltaY } = calculateMovement(creature);
 
           let newX = creature.x + deltaX;
           let newY = creature.y + deltaY;
 
-          // Boundary checks and direction adjustments
           if (newX <= 0 || newX >= 790) {
-            creature.velocity.direction = 180 - creature.velocity.direction; // Invert direction
-            deltaX = -deltaX; // Invert deltaX
-            newX = creature.x + deltaX; // Recalculate newX
+            creature.velocity.direction = 180 - creature.velocity.direction;
+            deltaX = -deltaX;
+            newX = creature.x + deltaX;
           }
 
           if (newY <= 0 || newY >= 590) {
-            creature.velocity.direction = 360 - creature.velocity.direction; // Invert direction
-            deltaY = -deltaY; // Invert deltaY
-            newY = creature.y + deltaY; // Recalculate newY
+            creature.velocity.direction = 360 - creature.velocity.direction;
+            deltaY = -deltaY;
+            newY = creature.y + deltaY;
           }
 
-          console.log('Creature position:', creature.x, creature.y);
-          console.log('New position:', newX, newY);
-          console.log('Creature health:', creature.health);
-
-          // Detect proximity to food and consume if close enough
           const healthGain = detectProximityToFood(creature);
-          const newHealth = creature.health - 1 + healthGain;
+          const oldHealth = creature.health;
+          const newHealth = creature.health - globalVariables.healthLossPerInterval + healthGain;
+          if (healthGain > 0) {
+            console.log(`Creature ${creature.id} gained health from eating. Health before: ${oldHealth}, Health after: ${newHealth}`);
+          }
 
           return {
             ...creature,
@@ -106,45 +121,53 @@ const App = () => {
             y: Math.max(0, Math.min(newY, 590)),
             health: newHealth,
           };
-        }).filter(creature => creature.health > 0); // Remove creatures with zero or negative health
+        }).filter(creature => creature.health > 0);
 
-        // Respawn food if any were consumed
-        if (foodItemsRef.current.length < globalVariables.foodRespawnRate) {
-          respawnFood();
+        const newCreatures = [];
+        for (let creature of updatedCodes) {
+          const offspring = attemptReproduction(creature, geneticCodesRef.current, globalVariables.mutationRate, globalVariables.reproductionRate);
+          if (offspring) {
+            newCreatures.push(offspring);
+          }
         }
 
-        setGeneticCodes(updatedCodes);
-        geneticCodesRef.current = updatedCodes;
-      }, 100); // Update every 100 milliseconds
-    } else {
-      // Clear the interval when the simulation stops
-      clearInterval(intervalRef.current);
-    }
+        const finalGeneticCodes = [...updatedCodes, ...newCreatures];
+        geneticCodesRef.current = finalGeneticCodes;
+        return finalGeneticCodes;
+      });
+    }, 100);
 
-    // Cleanup function to clear interval on component unmount or when isRunning changes
+    // Start the food respawn interval
+    foodIntervalRef.current = setInterval(() => {
+      console.log("Calling respawnFood");
+      respawnFood();
+    }, globalVariables.foodRespawnInterval);
+    console.log("Food respawn interval set");
+  };
+
+  const stopSimulation = () => {
+    console.log("Stopping simulation");
+    clearInterval(intervalRef.current); // Clear the simulation interval
+    clearInterval(foodIntervalRef.current); // Clear the food respawn interval
+  };
+
+  useEffect(() => {
     return () => {
-      console.log('Clearing interval...');
       clearInterval(intervalRef.current);
+      clearInterval(foodIntervalRef.current); // Clear the food respawn interval
     };
-  }, [isRunning]); // Depend on isRunning state
+  }, []);
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
-          <button onClick={regenerateGeneticCodes}>Regenerate Genetic Codes</button>
-          <span> - Generates new genetic codes based on the current variables.</span>
-        </div>
-
-        <div style={{ width: '800px', height: '600px', position: 'relative', overflow: 'hidden' }}>
-          <h2>Simulation</h2>
-          <GridContainer creatures={geneticCodes} foodItems={foodItems} />
-        </div>
+    <div className="app-container">
+      <div className="grid-container">
+        <Grid creatures={geneticCodes} foodItems={foodItems} debugMode={debugMode} />
       </div>
-
-      <div style={{ marginTop: '20px' }}>
+      <div className="controls-container">
         <button onClick={startSimulation}>Start Simulation</button>
         <button onClick={stopSimulation}>Stop Simulation</button>
+        <button onClick={resetSimulation}>Reset Simulation</button>
+        <button onClick={toggleDebugMode}>Toggle Debug Mode</button>
       </div>
     </div>
   );

@@ -37,23 +37,6 @@ Usage
    ```bash
    http://localhost:3000
 
-## Next Steps
-
-    - **Implement Health Gain from Food:
-    - **Detect when creatures are near food items, increase their health, and respawn consumed food.
-
-    - **Add Reproduction Mechanics:
-        - **Allow creatures to reproduce based on genetic crossover and mutation.
-
-    - **Enhance Visuals:
-        - **Improve visual indicators for creature health and appearance.
-
-    - **Optimize Performance:
-        - **Ensure smooth simulation with increasing numbers of creatures.
-
-    - **Simulation Controls:
-        - **Add controls to start, stop, and reset the simulation, and adjust simulation parameters.
-
 ### License
 
 This project is licensed under the MIT License.

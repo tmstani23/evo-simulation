@@ -1,5 +1,3 @@
-// src/genetics/geneticCodeTemplate.js
-
 import { generateUniqueId } from './utils';
 import { geneticVariables } from './geneticVariables';
 
@@ -7,20 +5,18 @@ import { geneticVariables } from './geneticVariables';
 export const generateGeneticCode = (variables) => {
   return {
     id: generateUniqueId(),
-    health: Math.floor(Math.random() * (variables.health.max - variables.health.min + 1)) + variables.health.min, // Initialize health
+    health: Math.floor(Math.random() * (variables.health.max - variables.health.min + 1)) + variables.health.min,
     velocity: {
       speed: Math.random() * (variables.speed.max - variables.speed.min) + variables.speed.min,
       direction: Math.random() * (variables.direction.max - variables.direction.min) + variables.direction.min,
     },
     vision: Math.random() * (variables.vision.max - variables.vision.min) + variables.vision.min,
     strength: Math.random() * (variables.strength.max - variables.strength.min) + variables.strength.min,
-    lifespan: Math.floor(Math.random() * (variables.lifespan.max - variables.lifespan.min + 1)) + variables.lifespan.min,
     neuralNetwork: [], // Placeholder for neural network weights
-    x: Math.random() * 790, // Initialize random x-coordinate within grid width
-    y: Math.random() * 590  // Initialize random y-coordinate within grid height
+    x: Math.random() * 790,
+    y: Math.random() * 590
   };
 };
-
 
 // Function to introduce random mutations in the genetic code
 export const mutateGeneticCode = (geneticCode, mutationRate) => {
@@ -81,4 +77,16 @@ export const crossoverGeneticCode = (parent1, parent2) => {
   offspring.id = generateUniqueId();
 
   return offspring;
+};
+
+// Function to attempt reproduction and return offspring if successful
+export const attemptReproduction = (creature, geneticCodes, mutationRate, reproductionRate) => {
+  if (Math.random() < reproductionRate) {
+    const parent2 = geneticCodes[Math.floor(Math.random() * geneticCodes.length)];
+    const offspring = crossoverGeneticCode(creature, parent2);
+    const mutatedOffspring = mutateGeneticCode(offspring, mutationRate);
+    console.log(`Creature ${creature.id} reproduced with ${parent2.id}. Offspring: ${mutatedOffspring.id}`);
+    return mutatedOffspring;
+  }
+  return null;
 };
