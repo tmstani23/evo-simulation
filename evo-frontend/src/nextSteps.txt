@@ -1,31 +1,11 @@
-High-Level Overview of Next Steps:
+Next Steps for Debugging and Fixing Issues
 
-    Reproduction Location:
-        Modify the reproduction logic to spawn offspring near the parent creature instead of a random location.
+1. Debugging Clumping and Random Movement:
 
-    Variable Sliders:
-        Add UI sliders to dynamically adjust simulation variables (e.g., mutation rate, health loss rate, food respawn rate) during runtime.
+    Ensure Consistent Velocity and Direction: Verify that creatures maintain their inherited velocity and direction without random changes.
+    Refactor Movement Logic: Ensure the calculateMovement function consistently calculates movement based on inherited properties.
 
-    Performance Optimization:
-        Ensure the simulation can handle larger numbers of creatures and interactions smoothly.
-        Optimize rendering and state updates for better performance.
+2. Refactor Genetic Inheritance Functions:
 
-    Further Debugging and Testing:
-        Continue testing and debugging to ensure all functionalities work as expected.
-        Fine-tune variables for balanced gameplay.
-
-    UI Enhancements:
-        Improve the user interface for better visualization and interaction.
-        Add more controls and indicators to make the simulation more interactive and informative.
-
-Immediate Next Steps:
-
-    Reproduction Location:
-        Ensure offspring are spawned near their parent creature on the grid.
-        Implement and verify this functionality.
-
-    Verify Reproduction Mechanics:
-        Conduct tests to confirm that reproduction, crossover, and mutation are working correctly and as intended.
-
-    Fine-Tune Variables:
-        Adjust and test different variable settings to find a balanced configuration for the simulation.
+    Review and Refactor crossoverGeneticCode: Ensure minimal random variation while maintaining distinct velocities for offspring.
+    Verify mutateGeneticCode: Ensure mutation rates are correctly applied without causing abrupt changes.

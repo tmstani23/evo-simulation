@@ -21,40 +21,32 @@ export const generateGeneticCode = (variables) => {
 // Function to introduce random mutations in the genetic code
 export const mutateGeneticCode = (geneticCode, mutationRate) => {
   const newGeneticCode = { ...geneticCode };
-  console.log('Original genetic code:', newGeneticCode);
 
   Object.keys(newGeneticCode).forEach(property => {
     const randomNumber = Math.random();
-    console.log(`Random number for ${property}:`, randomNumber);
     if (property !== 'id' && randomNumber < mutationRate) {
-      console.log(`Selected ${property} for mutation with random number:`, randomNumber);
       if (typeof newGeneticCode[property] === 'object' && newGeneticCode[property] !== null) {
         if (geneticVariables[property]) {
           Object.keys(newGeneticCode[property]).forEach(subProperty => {
             if (geneticVariables[property][subProperty] !== undefined) {
-              console.log(`Mutating ${property}.${subProperty}:`, newGeneticCode[property][subProperty]);
               newGeneticCode[property][subProperty] = Math.min(Math.max(
-                newGeneticCode[property][subProperty] + (Math.random() - 0.5) * 0.1,
+                newGeneticCode[property][subProperty] + (Math.random() - 0.5) * 0.05,
                 geneticVariables[property][subProperty].min
               ), geneticVariables[property][subProperty].max);
-              console.log(`New ${property}.${subProperty}:`, newGeneticCode[property][subProperty]);
             }
           });
         }
       } else {
         if (geneticVariables[property] !== undefined) {
-          console.log(`Mutating ${property}:`, newGeneticCode[property]);
           newGeneticCode[property] = Math.min(Math.max(
-            newGeneticCode[property] + (Math.random() - 0.5) * 0.1,
+            newGeneticCode[property] + (Math.random() - 0.5) * 0.05,
             geneticVariables[property].min
           ), geneticVariables[property].max);
-          console.log(`New ${property}:`, newGeneticCode[property]);
         }
       }
     }
   });
 
-  console.log('Mutated genetic code:', newGeneticCode);
   return newGeneticCode;
 };
 
@@ -67,6 +59,9 @@ export const crossoverGeneticCode = (parent1, parent2) => {
       if (typeof offspring[key] === 'object' && offspring[key] !== null) {
         Object.keys(offspring[key]).forEach(subKey => {
           offspring[key][subKey] = Math.random() > 0.5 ? parent1[key][subKey] : parent2[key][subKey];
+          if (key === 'velocity' && geneticVariables[key] && geneticVariables[key][subKey] !== undefined) {
+            offspring[key][subKey] = Math.max(Math.min(offspring[key][subKey] + (Math.random() - 0.5) * 0.05, geneticVariables[key][subKey].max), geneticVariables[key][subKey].min); // Minimal random variation
+          }
         });
       } else {
         offspring[key] = Math.random() > 0.5 ? parent1[key] : parent2[key];
@@ -83,10 +78,26 @@ export const crossoverGeneticCode = (parent1, parent2) => {
 export const attemptReproduction = (creature, geneticCodes, mutationRate, reproductionRate) => {
   if (Math.random() < reproductionRate) {
     const parent2 = geneticCodes[Math.floor(Math.random() * geneticCodes.length)];
-    const offspring = crossoverGeneticCode(creature, parent2);
-    const mutatedOffspring = mutateGeneticCode(offspring, mutationRate);
-    console.log(`Creature ${creature.id} reproduced with ${parent2.id}. Offspring: ${mutatedOffspring.id}`);
-    return mutatedOffspring;
+    let offspring = crossoverGeneticCode(creature, parent2);
+    offspring = mutateGeneticCode(offspring, mutationRate);
+
+    // Calculate initial spawn position within a specified radius
+    const radius = 10; // Example radius
+    const angle = Math.random() * 2 * Math.PI; // Random angle
+    const distance = Math.random() * radius; // Random distance within radius
+
+    let newX = creature.x + distance * Math.cos(angle);
+    let newY = creature.y + distance * Math.sin(angle);
+
+    // Ensure new position is within grid boundaries
+    newX = Math.max(0, Math.min(newX, 790));
+    newY = Math.max(0, Math.min(newY, 590));
+
+    offspring.x = newX;
+    offspring.y = newY;
+
+    console.log(`Creature ${creature.id} reproduced with ${parent2.id}. Offspring: ${offspring.id} at (${offspring.x}, ${offspring.y})`);
+    return offspring;
   }
   return null;
 };

@@ -37,16 +37,16 @@ const App = () => {
   const calculateMovement = (creature) => {
     const speed = creature.velocity.speed;
     const direction = creature.velocity.direction;
-
+  
     if (typeof speed !== 'number' || typeof direction !== 'number') {
       console.error('Invalid speed or direction:', speed, direction);
       return { deltaX: 0, deltaY: 0 };
     }
-
+  
     const angle = direction * (Math.PI / 180); // Convert to radians
     const deltaX = speed * Math.cos(angle);
     const deltaY = speed * Math.sin(angle);
-
+  
     return { deltaX, deltaY };
   };
 
@@ -92,37 +92,43 @@ const App = () => {
       setGeneticCodes((prevGeneticCodes) => {
         const updatedCodes = prevGeneticCodes.map((creature) => {
           let { deltaX, deltaY } = calculateMovement(creature);
-
+  
           let newX = creature.x + deltaX;
           let newY = creature.y + deltaY;
-
+  
           if (newX <= 0 || newX >= 790) {
             creature.velocity.direction = 180 - creature.velocity.direction;
             deltaX = -deltaX;
             newX = creature.x + deltaX;
           }
-
+  
           if (newY <= 0 || newY >= 590) {
             creature.velocity.direction = 360 - creature.velocity.direction;
             deltaY = -deltaY;
             newY = creature.y + deltaY;
           }
-
+  
           const healthGain = detectProximityToFood(creature);
           const oldHealth = creature.health;
           const newHealth = creature.health - globalVariables.healthLossPerInterval + healthGain;
           if (healthGain > 0) {
             console.log(`Creature ${creature.id} gained health from eating. Health before: ${oldHealth}, Health after: ${newHealth}`);
           }
-
+  
           return {
             ...creature,
             x: Math.max(0, Math.min(newX, 790)),
             y: Math.max(0, Math.min(newY, 590)),
             health: newHealth,
           };
-        }).filter(creature => creature.health > 0);
-
+        }).filter(creature => {
+          if (creature.health <= 0) {
+            console.log(`Creature ${creature.id} removed due to health <= 0`);
+            return false;
+          }
+          return true;
+        });
+  
         const newCreatures = [];
         for (let creature of updatedCodes) {
           const offspring = attemptReproduction(creature, geneticCodesRef.current, globalVariables.mutationRate, globalVariables.reproductionRate);
@@ -130,13 +136,13 @@ const App = () => {
             newCreatures.push(offspring);
           }
         }
-
+  
         const finalGeneticCodes = [...updatedCodes, ...newCreatures];
         geneticCodesRef.current = finalGeneticCodes;
         return finalGeneticCodes;
       });
     }, 100);
-
+  
     // Start the food respawn interval
     foodIntervalRef.current = setInterval(() => {
       console.log("Calling respawnFood");

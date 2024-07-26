@@ -4,9 +4,11 @@ const globalVariables = {
   foodHealthAmount: 30, // Increase health gained by eating food
   initialFoodCount: 150, // Initial number of food items
   foodRespawnRate: 10, // Number of food items to respawn each interval
-  foodRespawnInterval: 1000, // Respawn food every 1 seconds
+  foodRespawnInterval: 1000, // Respawn food every 1 second
   creatureCount: 50, // Initial number of creatures
-  healthLossPerInterval: 0.05, // Reduce health lost per interval
+  healthLossPerInterval: 0.2, // Reduce health lost per interval
+  reproductionRate: 0.009, // Probability of reproduction per interval
 };
 
 export default globalVariables;
+
