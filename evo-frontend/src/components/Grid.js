@@ -1,3 +1,4 @@
+// Grid.js
 import React from 'react';
 import '../App.css'; // Ensure the path is correct relative to the components folder
 
@@ -9,7 +10,7 @@ const Grid = React.memo(({ creatures, foodItems, debugMode }) => {
   console.log('Grid re-rendered'); // Log re-renders
 
   return (
-    <div className="grid-container">
+    <div className="grid-content">
       {foodItems.map((food, index) => (
         <div key={index} className="food" style={{ left: `${food.x}px`, top: `${food.y}px` }}></div>
       ))}

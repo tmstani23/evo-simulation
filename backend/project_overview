@@ -42,6 +42,7 @@ evo-frontend/
 ├── public/
 ├── src/
 │   ├── components/
+├   ├   ├──── Grid.js
 │   ├── genetics/
 │   │   ├── geneticCodeTemplate.js
 │   │   ├── geneticVariables.js
@@ -49,6 +50,7 @@ evo-frontend/
 │   ├── pages/
 │   ├── App.css
 │   ├── App.js
+│   ├── globalVariables.js
 │   ├── index.css
 │   ├── index.js
 │   ├── nextSteps.txt
