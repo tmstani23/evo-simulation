@@ -1,11 +1,26 @@
-Next Steps for Debugging and Fixing Issues
+Test Current Functionality:
 
-1. Debugging Clumping and Random Movement:
+    Verify creature movement, health management, mating, and offspring generation.
+    Test adjustable sliders to ensure they dynamically affect the simulation.
 
-    Ensure Consistent Velocity and Direction: Verify that creatures maintain their inherited velocity and direction without random changes.
-    Refactor Movement Logic: Ensure the calculateMovement function consistently calculates movement based on inherited properties.
+Add Predators to the Simulation:
 
-2. Refactor Genetic Inheritance Functions:
+    Define predator traits and behaviors.
+    Implement predator generation and movement logic.
+    Ensure predators hunt and eat creatures, affecting the simulation dynamics.
 
-    Review and Refactor crossoverGeneticCode: Ensure minimal random variation while maintaining distinct velocities for offspring.
-    Verify mutateGeneticCode: Ensure mutation rates are correctly applied without causing abrupt changes.
+Enhance UI for Predators:
+
+    Display predators on the simulation grid.
+    Optionally, add UI controls to adjust predator-related variables.
+
+Optimization and Refinement:
+
+    Optimize the simulation for better performance.
+    Refine the health and survival mechanics for both creatures and predators.
+    Ensure smooth and realistic interactions within the environment.
+
+Continuous Testing and Debugging:
+
+    Regularly test all functionalities to ensure everything works seamlessly.
+    Debug any issues that arise to maintain a smooth simulation experience.

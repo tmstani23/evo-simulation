@@ -1,7 +1,7 @@
 import { generateUniqueId } from './utils';
-import { geneticVariables } from './geneticVariables';
+import { geneticVariables, predatorGeneticVariables } from './geneticVariables';
 
-// Function to generate a random genetic code for a creature
+// Function to generate a random genetic code
 export const generateGeneticCode = (variables) => {
   return {
     id: generateUniqueId(),
@@ -19,29 +19,29 @@ export const generateGeneticCode = (variables) => {
 };
 
 // Function to introduce random mutations in the genetic code
-export const mutateGeneticCode = (geneticCode, mutationRate) => {
+export const mutateGeneticCode = (geneticCode, mutationRate, variables) => {
   const newGeneticCode = { ...geneticCode };
 
   Object.keys(newGeneticCode).forEach(property => {
     const randomNumber = Math.random();
     if (property !== 'id' && randomNumber < mutationRate) {
       if (typeof newGeneticCode[property] === 'object' && newGeneticCode[property] !== null) {
-        if (geneticVariables[property]) {
+        if (variables[property]) {
           Object.keys(newGeneticCode[property]).forEach(subProperty => {
-            if (geneticVariables[property][subProperty] !== undefined) {
+            if (variables[property][subProperty] !== undefined) {
               newGeneticCode[property][subProperty] = Math.min(Math.max(
                 newGeneticCode[property][subProperty] + (Math.random() - 0.5) * 0.05,
-                geneticVariables[property][subProperty].min
-              ), geneticVariables[property][subProperty].max);
+                variables[property][subProperty].min
+              ), variables[property][subProperty].max);
             }
           });
         }
       } else {
-        if (geneticVariables[property] !== undefined) {
+        if (variables[property] !== undefined) {
           newGeneticCode[property] = Math.min(Math.max(
             newGeneticCode[property] + (Math.random() - 0.5) * 0.05,
-            geneticVariables[property].min
-          ), geneticVariables[property].max);
+            variables[property].min
+          ), variables[property].max);
         }
       }
     }
@@ -51,7 +51,7 @@ export const mutateGeneticCode = (geneticCode, mutationRate) => {
 };
 
 // Function to combine genetic codes from two parent creatures to produce offspring
-export const crossoverGeneticCode = (parent1, parent2) => {
+export const crossoverGeneticCode = (parent1, parent2, variables) => {
   const offspring = { ...parent1 };
 
   Object.keys(offspring).forEach(key => {
@@ -59,8 +59,8 @@ export const crossoverGeneticCode = (parent1, parent2) => {
       if (typeof offspring[key] === 'object' && offspring[key] !== null) {
         Object.keys(offspring[key]).forEach(subKey => {
           offspring[key][subKey] = Math.random() > 0.5 ? parent1[key][subKey] : parent2[key][subKey];
-          if (key === 'velocity' && geneticVariables[key] && geneticVariables[key][subKey] !== undefined) {
-            offspring[key][subKey] = Math.max(Math.min(offspring[key][subKey] + (Math.random() - 0.5) * 0.05, geneticVariables[key][subKey].max), geneticVariables[key][subKey].min); // Minimal random variation
+          if (key === 'velocity' && variables[key] && variables[key][subKey] !== undefined) {
+            offspring[key][subKey] = Math.max(Math.min(offspring[key][subKey] + (Math.random() - 0.5) * 0.05, variables[key][subKey].max), variables[key][subKey].min); // Minimal random variation
           }
         });
       } else {
@@ -75,11 +75,11 @@ export const crossoverGeneticCode = (parent1, parent2) => {
 };
 
 // Function to attempt reproduction and return offspring if successful
-export const attemptReproduction = (creature, geneticCodes, mutationRate, reproductionRate) => {
+export const attemptReproduction = (creature, geneticCodes, mutationRate, reproductionRate, variables) => {
   if (Math.random() < reproductionRate) {
     const parent2 = geneticCodes[Math.floor(Math.random() * geneticCodes.length)];
-    let offspring = crossoverGeneticCode(creature, parent2);
-    offspring = mutateGeneticCode(offspring, mutationRate);
+    let offspring = crossoverGeneticCode(creature, parent2, variables);
+    offspring = mutateGeneticCode(offspring, mutationRate, variables);
 
     // Calculate initial spawn position within a specified radius
     const radius = 10; // Example radius
@@ -101,3 +101,7 @@ export const attemptReproduction = (creature, geneticCodes, mutationRate, reprod
   }
   return null;
 };
+
+// Suppress unused variable warnings
+console.log(geneticVariables);
+console.log(predatorGeneticVariables);
