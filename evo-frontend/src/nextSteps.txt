@@ -1,26 +1,16 @@
-Test Current Functionality:
+Testing:
 
-    Verify creature movement, health management, mating, and offspring generation.
-    Test adjustable sliders to ensure they dynamically affect the simulation.
+    Thoroughly test the current implementation to ensure all features are functioning as expected, including health management, predator-prey interactions, and visualization.
 
-Add Predators to the Simulation:
+Debugging:
 
-    Define predator traits and behaviors.
-    Implement predator generation and movement logic.
-    Ensure predators hunt and eat creatures, affecting the simulation dynamics.
+    Address any bugs or issues identified during testing.
 
-Enhance UI for Predators:
+Enhancements:
 
-    Display predators on the simulation grid.
-    Optionally, add UI controls to adjust predator-related variables.
+    Add sliders for adjusting global variables specific to predators, similar to how they are implemented for prey.
+    Implement further features or improvements based on testing feedback, such as fine-tuning predator behavior and interactions.
 
-Optimization and Refinement:
+Documentation:
 
-    Optimize the simulation for better performance.
-    Refine the health and survival mechanics for both creatures and predators.
-    Ensure smooth and realistic interactions within the environment.
-
-Continuous Testing and Debugging:
-
-    Regularly test all functionalities to ensure everything works seamlessly.
-    Debug any issues that arise to maintain a smooth simulation experience.
+    Document the changes and ensure the code is well-commented for future reference and maintenance.

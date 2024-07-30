@@ -14,13 +14,13 @@ This project is a creature simulation where virtual creatures move within a grid
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/creature-simulation.git
+   git clone https://github.com/tmstani23/evo-simulation
 
 
 
 2. **Navigate to the project directory:**
    ```bash
-   cd creature-simulation
+   cd evo-simulation
 
 2. **Install dependencies:**
    ```bash
@@ -31,6 +31,7 @@ Usage
 
 2. **Start the development server:**
    ```bash
+   cd evo-frontend
    npm start
 
 2. **Open the simulation in your browser:**

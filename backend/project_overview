@@ -1,5 +1,6 @@
 Project Overview
-Core Features
+
+Core Features:
 
     Creature Representation:
         Genetic Code: Encode creature traits as JSON objects for easy manipulation and storage.
@@ -23,11 +24,7 @@ Core Features
         Inputs/Outputs: Define neural network inputs (e.g., distance to food, presence of other creatures) and outputs (e.g., movement direction, speed).
         Training: Use simple heuristics or evolutionary algorithms to train the neural networks, allowing creatures to learn and adapt their behaviors over generations.
 
-Current State of Development
-
-Project Structure:
-
-backend/
+        backend/
 ├── controllers/
 ├── models/
 ├── node_modules/
@@ -35,22 +32,25 @@ backend/
 ├── index.js
 ├── package-lock.json
 ├── package.json
-└── project_overview.txt
 
 evo-frontend/
 ├── node_modules/
 ├── public/
 ├── src/
 │   ├── components/
-├   ├   ├──── Grid.js
+│   │   ├── Grid.js
+│   │   ├── GridItems.js
+│   │   ├── GlobalVariablesSliders.js
+│   │   ├── globalVariables.js
 │   ├── genetics/
 │   │   ├── geneticCodeTemplate.js
 │   │   ├── geneticVariables.js
 │   │   ├── utils.js
-│   ├── pages/
+│   ├── simulation/
+│   │   ├── SimulationLogic.js
+│   │   ├── SimulationHelpers.js
 │   ├── App.css
 │   ├── App.js
-│   ├── globalVariables.js
 │   ├── index.css
 │   ├── index.js
 │   ├── nextSteps.txt
@@ -64,57 +64,3 @@ evo-frontend/
 ├── .gitattributes
 ├── .gitignore
 └── LICENSE
-
-
-Backend:
-
-    Set up using Express and body-parser to handle JSON payloads.
-    CORS enabled for development.
-    Routes:
-        GET /start: Initializes the simulation.
-        POST /update: Updates the simulation state and returns the current state of creatures and environment.
-
-Frontend:
-
-    Initialized using Create React App.
-    Uses Axios to communicate with the backend.
-    Periodically sends POST /update requests to the backend to update the simulation state.
-    Configured with http-proxy-middleware to proxy API requests during development.
-
-Middleware Configuration:
-
-    http-proxy-middleware handles API requests from the React frontend to the Express backend during development.
-
-Hybrid Approach Explanation:
-
-    Core simulation logic runs on the frontend.
-    Backend is utilized for data persistence and retrieval.
-
-Recent Developments
-
-    Mutation and Crossover:
-        Mutation functionality: Applied to individual genetic codes to introduce random changes.
-        Crossover functionality: Combines genetic codes from two parents to produce offspring, followed by mutation.
-
-    UI Enhancements:
-        Descriptors added to buttons to help users understand their functionality:
-            Mutate: Applies random mutations to the selected genetic code.
-            Crossover: Combines the selected genetic code with the next one to produce an offspring, then applies mutation.
-
-Next Steps
-
-    Health and Survival Mechanics:
-        Implement health management where creatures lose health over time and gain health by consuming food.
-
-    Environment Interaction:
-        Develop the environment where creatures interact, move, and find food.
-
-    Movement Mechanics:
-        Implement movement mechanics based on outputs from the neural network.
-
-    Further UI Enhancements:
-        Improve the UI for better visualization and interaction with the simulation.
-
-    Testing and Debugging:
-        Continue testing mutation and crossover functionalities.
-        Debug issues and ensure smooth simulation flow.
