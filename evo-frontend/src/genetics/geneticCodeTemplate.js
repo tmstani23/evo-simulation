@@ -2,20 +2,25 @@ import { generateUniqueId } from './utils';
 import { geneticVariables, predatorGeneticVariables } from './geneticVariables';
 
 // Function to generate a random genetic code
-export const generateGeneticCode = (variables) => {
-  return {
+export const generateGeneticCode = (geneticVariables) => {
+  const geneticCode = {
     id: generateUniqueId(),
-    health: Math.floor(Math.random() * (variables.health.max - variables.health.min + 1)) + variables.health.min,
-    velocity: {
-      speed: Math.random() * (variables.speed.max - variables.speed.min) + variables.speed.min,
-      direction: Math.random() * (variables.direction.max - variables.direction.min) + variables.direction.min,
+    health: {
+      current: Math.floor(Math.random() * (geneticVariables.health.max - geneticVariables.health.min + 1)) + geneticVariables.health.min,
+      max: geneticVariables.health.max,
     },
-    vision: Math.random() * (variables.vision.max - variables.vision.min) + variables.vision.min,
-    strength: Math.random() * (variables.strength.max - variables.strength.min) + variables.strength.min,
-    neuralNetwork: [], // Placeholder for neural network weights
+    velocity: {
+      speed: Math.random() * (geneticVariables.speed.max - geneticVariables.speed.min) + geneticVariables.speed.min,
+      direction: Math.random() * (geneticVariables.direction.max - geneticVariables.direction.min) + geneticVariables.direction.min,
+    },
+    vision: Math.random() * (geneticVariables.vision.max - geneticVariables.vision.min) + geneticVariables.vision.min,
+    strength: Math.random() * (geneticVariables.strength.max - geneticVariables.strength.min) + geneticVariables.strength.min,
+    neuralNetwork: [],
     x: Math.random() * 790,
-    y: Math.random() * 590
+    y: Math.random() * 590,
   };
+  console.log('Generated genetic code:', geneticCode);
+  return geneticCode;
 };
 
 // Function to introduce random mutations in the genetic code

@@ -24,7 +24,7 @@ Core Features:
         Inputs/Outputs: Define neural network inputs (e.g., distance to food, presence of other creatures) and outputs (e.g., movement direction, speed).
         Training: Use simple heuristics or evolutionary algorithms to train the neural networks, allowing creatures to learn and adapt their behaviors over generations.
 
-        backend/
+backend/
 ├── controllers/
 ├── models/
 ├── node_modules/
@@ -49,6 +49,8 @@ evo-frontend/
 │   ├── simulation/
 │   │   ├── SimulationLogic.js
 │   │   ├── SimulationHelpers.js
+│   ├── utils/
+│   │   ├── debounce.js
 │   ├── App.css
 │   ├── App.js
 │   ├── index.css

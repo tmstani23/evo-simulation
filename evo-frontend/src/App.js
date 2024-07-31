@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { startSimulation, stopSimulation, resetSimulation } from './simulation/SimulationLogic';
 import { generateGeneticCode } from './genetics/geneticCodeTemplate';
 import { geneticVariables, predatorGeneticVariables } from './genetics/geneticVariables';
+import { generateUniqueId } from './genetics/utils'; // Correct import path
 import initialGlobalVariables from './components/globalVariables'; // Updated import path
 import Grid from './components/Grid';
 import GlobalVariablesSliders from './components/GlobalVariablesSliders'; // Ensure single import
@@ -14,10 +15,18 @@ const App = () => {
 
   // State for storing genetic codes of creatures, predators, food items, and debug mode
   const [geneticCodes, setGeneticCodes] = useState(
-    Array.from({ length: globalVariables.creatureCount }, () => generateGeneticCode(geneticVariables))
+    Array.from({ length: globalVariables.creatureCount }, () => ({
+      id: generateUniqueId(),
+      geneticCode: generateGeneticCode(geneticVariables),
+      health: { current: Math.floor(Math.random() * (geneticVariables.health.max - geneticVariables.health.min + 1)) + geneticVariables.health.min, max: geneticVariables.health.max }
+    }))
   );
   const [predatorCodes, setPredatorCodes] = useState(
-    Array.from({ length: globalVariables.initialPredatorCount }, () => generateGeneticCode(predatorGeneticVariables))
+    Array.from({ length: globalVariables.initialPredatorCount }, () => ({
+      id: generateUniqueId(),
+      geneticCode: generateGeneticCode(predatorGeneticVariables),
+      health: { current: Math.floor(Math.random() * (predatorGeneticVariables.health.max - predatorGeneticVariables.health.min + 1)) + predatorGeneticVariables.health.min, max: predatorGeneticVariables.health.max }
+    }))
   );
   const [foodItems, setFoodItems] = useState(
     Array.from({ length: globalVariables.initialFoodCount }, () => ({

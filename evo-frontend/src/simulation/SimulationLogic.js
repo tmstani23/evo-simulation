@@ -1,73 +1,78 @@
+// File: simulation/SimulationLogic.js
+
 import { generateGeneticCode } from '../genetics/geneticCodeTemplate';
 import { geneticVariables, predatorGeneticVariables } from '../genetics/geneticVariables';
+import globalVariables from '../components/globalVariables';
+import { calculateMovement, detectProximityToFood, detectProximityToPrey, handleReproduction, applyHealthLoss } from './SimulationHelpers';
 
 // Function to start the simulation
 export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables) => {
   console.log('Starting simulation with global variables:', globalVariables);
 
-  // Logic to start the simulation
-intervalRef.current = setInterval(() => {
-    // Update genetic codes
+  intervalRef.current = setInterval(() => {
     setGeneticCodes(prevGeneticCodes => {
-      const updatedGeneticCodes = prevGeneticCodes.map(creature => {
-        const deltaX = creature.velocity.speed * Math.cos(creature.velocity.direction * Math.PI / 180);
-        const deltaY = creature.velocity.speed * Math.sin(creature.velocity.direction * Math.PI / 180);
-        let newX = creature.x + deltaX;
-        let newY = creature.y + deltaY;
-  
-        // Check for wall collisions and adjust direction if necessary
-        if (newX < 0 || newX > 790) {
-          creature.velocity.direction = 180 - creature.velocity.direction;
-          newX = Math.max(0, Math.min(newX, 790));
-        }
-        if (newY < 0 || newY > 590) {
-          creature.velocity.direction = 360 - creature.velocity.direction;
-          newY = Math.max(0, Math.min(newY, 590));
-        }
-  
-        creature.x = newX;
-        creature.y = newY;
-        return creature;
-      });
+      const updatedGeneticCodes = applyHealthLoss(prevGeneticCodes, globalVariables.healthLossPerIntervalPrey)
+        .map(creature => {
+          const { deltaX, deltaY } = calculateMovement(creature.geneticCode);
+          let newX = creature.geneticCode.x + deltaX;
+          let newY = creature.geneticCode.y + deltaY;
+
+          if (newX < 0 || newX > 790) {
+            creature.geneticCode.velocity.direction = 180 - creature.geneticCode.velocity.direction;
+            newX = Math.max(0, Math.min(newX, 790));
+          }
+          if (newY < 0 || newY > 590) {
+            creature.geneticCode.velocity.direction = 360 - creature.geneticCode.velocity.direction;
+            newY = Math.max(0, Math.min(newY, 590));
+          }
+
+          creature.geneticCode.x = newX;
+          creature.geneticCode.y = newY;
+          return creature;
+        })
+        .filter(creature => creature.health.current > 0);
+
       geneticCodesRef.current = updatedGeneticCodes;
       return updatedGeneticCodes;
     });
-  
-    // Update predator codes
+
     setPredatorCodes(prevPredatorCodes => {
-      const updatedPredatorCodes = prevPredatorCodes.map(predator => {
-        const deltaX = predator.velocity.speed * Math.cos(predator.velocity.direction * Math.PI / 180);
-        const deltaY = predator.velocity.speed * Math.sin(predator.velocity.direction * Math.PI / 180);
-        let newX = predator.x + deltaX;
-        let newY = predator.y + deltaY;
-  
-        // Check for wall collisions and adjust direction if necessary
-        if (newX < 0 || newX > 790) {
-          predator.velocity.direction = 180 - predator.velocity.direction;
-          newX = Math.max(0, Math.min(newX, 790));
-        }
-        if (newY < 0 || newY > 590) {
-          predator.velocity.direction = 360 - predator.velocity.direction;
-          newY = Math.max(0, Math.min(newY, 590));
-        }
-  
-        predator.x = newX;
-        predator.y = newY;
-        return predator;
-      });
+      const updatedPredatorCodes = applyHealthLoss(prevPredatorCodes, globalVariables.healthLossPerIntervalPredator)
+        .map(predator => {
+          const { deltaX, deltaY } = calculateMovement(predator.geneticCode);
+          let newX = predator.geneticCode.x + deltaX;
+          let newY = predator.geneticCode.y + deltaY;
+
+          if (newX < 0 || newX > 790) {
+            predator.geneticCode.velocity.direction = 180 - predator.geneticCode.velocity.direction;
+            newX = Math.max(0, Math.min(newX, 790));
+          }
+          if (newY < 0 || newY > 590) {
+            predator.geneticCode.velocity.direction = 360 - predator.geneticCode.velocity.direction;
+            newY = Math.max(0, Math.min(newY, 590));
+          }
+
+          predator.geneticCode.x = newX;
+          predator.geneticCode.y = newY;
+          return predator;
+        })
+        .filter(predator => predator.health.current > 0);
+
       predatorCodesRef.current = updatedPredatorCodes;
       return updatedPredatorCodes;
     });
-  
-    // Update food items
+
     setFoodItems(prevFoodItems => {
       const updatedFoodItems = prevFoodItems.map(food => food);
       foodItemsRef.current = updatedFoodItems;
       return updatedFoodItems;
     });
-  }, 135); //simulation speed m/s
 
-  // Logic to handle food respawn
+    detectProximityToFood(setGeneticCodes, geneticCodesRef, setFoodItems, foodItemsRef, globalVariables);
+    detectProximityToPrey(setPredatorCodes, predatorCodesRef, setGeneticCodes, geneticCodesRef, globalVariables);
+
+  }, 135);
+
   foodIntervalRef.current = setInterval(() => {
     setFoodItems(prevFoodItems => {
       const newFoodItems = Array.from({ length: globalVariables.foodRespawnRate }, () => ({
@@ -89,8 +94,14 @@ export const stopSimulation = (intervalRef, foodIntervalRef) => {
 
 // Function to reset the simulation
 export const resetSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables) => {
-  const newGeneticCodes = Array.from({ length: globalVariables.creatureCount }, () => generateGeneticCode(geneticVariables));
-  const newPredatorCodes = Array.from({ length: globalVariables.initialPredatorCount }, () => generateGeneticCode(predatorGeneticVariables));
+  const newGeneticCodes = Array.from({ length: globalVariables.creatureCount }, () => ({
+    geneticCode: generateGeneticCode(geneticVariables),
+    health: { current: Math.floor(Math.random() * (geneticVariables.health.max - geneticVariables.health.min + 1)) + geneticVariables.health.min, max: geneticVariables.health.max }
+  }));
+  const newPredatorCodes = Array.from({ length: globalVariables.initialPredatorCount }, () => ({
+    geneticCode: generateGeneticCode(predatorGeneticVariables),
+    health: { current: Math.floor(Math.random() * (predatorGeneticVariables.health.max - predatorGeneticVariables.health.min + 1)) + predatorGeneticVariables.health.min, max: predatorGeneticVariables.health.max }
+  }));
   const newFoodItems = Array.from({ length: globalVariables.initialFoodCount }, () => ({
     x: Math.random() * 790,
     y: Math.random() * 590,
