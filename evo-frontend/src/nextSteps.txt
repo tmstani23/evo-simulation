@@ -1,16 +1,43 @@
-Testing:
+Next Steps for Diagnosing Issues
 
-    Thoroughly test the current implementation to ensure all features are functioning as expected, including health management, predator-prey interactions, and visualization.
+    Offspring Dying Immediately:
+        Check Health Initialization:
+            Verify that offspring health is correctly initialized and not being set to a value that causes immediate death.
+        Mutation Impact:
+            Ensure mutations are not causing health to drop below the threshold required for survival.
 
-Debugging:
+    Super Fast Offspring:
+        Velocity Initialization:
+            Check if offspring velocity is being correctly inherited or mutated and ensure it remains within a reasonable range.
+        Mutation Impact:
+            Ensure mutations to velocity are not causing unrealistic speeds.
 
-    Address any bugs or issues identified during testing.
+    Direction Changes Before Hitting Walls:
+        Direction Calculation:
+            Verify the logic that handles direction changes to ensure it only occurs when hitting walls.
+        Movement Calculation:
+            Check if any part of the movement logic is causing premature direction changes.
 
-Enhancements:
+    Parent Dying When Spawning Offspring:
+        Health Deduction:
+            Ensure that the parent's health is not being improperly reduced when offspring are spawned.
+        Reproduction Logic:
+            Review the reproduction logic to ensure it does not inadvertently impact the parent's health.
 
-    Add sliders for adjusting global variables specific to predators, similar to how they are implemented for prey.
-    Implement further features or improvements based on testing feedback, such as fine-tuning predator behavior and interactions.
+Next Steps
 
-Documentation:
+    Review and Debug Health Initialization:
+        Add logging for health values before and after offspring are created.
+        Ensure health mutations do not cause invalid health values.
 
-    Document the changes and ensure the code is well-commented for future reference and maintenance.
+    Review and Debug Velocity Initialization:
+        Add logging for velocity values before and after offspring are created.
+        Ensure velocity mutations do not cause unrealistic speeds.
+
+    Review and Debug Movement and Direction Logic:
+        Add logging for direction changes to understand why and when they occur.
+        Ensure direction changes are only triggered by collisions with walls.
+
+    Review and Debug Parent Health Impact During Reproduction:
+        Add logging for parent health before and after offspring are spawned.
+        Ensure reproduction logic does not reduce the parent's health.

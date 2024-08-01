@@ -14,6 +14,8 @@ export const FoodItem = ({ food }) => (
 export const Creature = ({ creature, debugMode }) => {
   const size = getSizeFromHealth(creature.health.current, 5, 20, 0, 100); // Calculate size based on health
   const { x, y, velocity, vision, strength } = creature.geneticCode;
+  const backgroundColor = creature.isOffspring ? '#ff9999' : '#e74c3c'; // Lighter red for offspring
+
   return (
     <div
       className="creature"
@@ -22,7 +24,7 @@ export const Creature = ({ creature, debugMode }) => {
         top: `${y}px`,
         width: `${size}px`,
         height: `${size}px`,
-        backgroundColor: '#e74c3c', // Color for creatures
+        backgroundColor, // Set background color based on isOffspring
         position: 'absolute', // Ensure the creature is positioned absolutely
         borderRadius: '50%', // Ensure the creature is a circle
       }}
@@ -57,10 +59,9 @@ export const Creature = ({ creature, debugMode }) => {
 
 // Component to render a predator on the grid
 export const Predator = ({ predator, debugMode }) => {
-  const size = getSizeFromHealth(predator.health.current, 5, 20, 50, 150); // Calculate size based on health, same as creatures
+  const size = getSizeFromHealth(predator.health.current, 5, 20, 50, 150); // Calculate size based on health
   const { x, y, velocity, vision, strength } = predator.geneticCode;
-
-  console.log(`Rendering Predator: `, predator);
+  const backgroundColor = predator.isOffspring ? '#00008B' : '#3498db'; // Darker blue for offspring
 
   return (
     <div
@@ -70,7 +71,7 @@ export const Predator = ({ predator, debugMode }) => {
         top: `${y}px`,
         width: `${size}px`,
         height: `${size}px`,
-        backgroundColor: '#3498db', // Light blue color for predators
+        backgroundColor, // Set background color based on isOffspring
         position: 'absolute', // Ensure the predator is positioned absolutely
         borderRadius: '50%', // Ensure the predator is a circle
       }}

@@ -59,10 +59,10 @@ const GlobalVariablesSliders = ({ globalVariables, setGlobalVariables, disabled 
             min = 0.01; max = 1; step = 0.01; // Health loss per interval: 0.01 to 1 unit
             break;
           case 'reproductionRate':
-            min = 0.001; max = 0.1; step = 0.001; // Reproduction rate: 0.1% to 10%
+            min = 0.001; max = 0.009; step = 0.001; // Adjust reproduction rate: 0.1% to 2%
             break;
           case 'predatorReproductionRate':
-            min = 0.001; max = 0.1; step = 0.001; // Predator reproduction rate: 0.1% to 10%
+            min = 0.001; max = 0.009; step = 0.001; // Adjust predator reproduction rate: 0.1% to 2%
             break;
           case 'baseHealthLossFromPredator':
             min = 10; max = 100; step = 1; // Base health loss from predator: 10 to 100 units

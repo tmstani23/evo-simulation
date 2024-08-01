@@ -1,5 +1,4 @@
 import { generateUniqueId } from './utils';
-import { geneticVariables, predatorGeneticVariables } from './geneticVariables';
 
 // Function to generate a random genetic code
 export const generateGeneticCode = (geneticVariables) => {
@@ -19,7 +18,7 @@ export const generateGeneticCode = (geneticVariables) => {
     x: Math.random() * 790,
     y: Math.random() * 590,
   };
-  console.log('Generated genetic code:', geneticCode);
+  //console.log('Generated genetic code:', geneticCode);
   return geneticCode;
 };
 
@@ -52,12 +51,18 @@ export const mutateGeneticCode = (geneticCode, mutationRate, variables) => {
     }
   });
 
+  // Ensure max is always valid
+  if (newGeneticCode.health.max === undefined || isNaN(newGeneticCode.health.max)) {
+    newGeneticCode.health.max = variables.health.max;
+  }
+
   return newGeneticCode;
 };
 
 // Function to combine genetic codes from two parent creatures to produce offspring
 export const crossoverGeneticCode = (parent1, parent2, variables) => {
   const offspring = { ...parent1 };
+  console.log(`Crossover parents: ${parent1.id}, ${parent2.id}`); // Debugging line
 
   Object.keys(offspring).forEach(key => {
     if (key !== 'id') {
@@ -75,6 +80,7 @@ export const crossoverGeneticCode = (parent1, parent2, variables) => {
   });
 
   offspring.id = generateUniqueId();
+  console.log(`New offspring ID: ${offspring.id}`); // Debugging line
 
   return offspring;
 };
@@ -85,28 +91,26 @@ export const attemptReproduction = (creature, geneticCodes, mutationRate, reprod
     const parent2 = geneticCodes[Math.floor(Math.random() * geneticCodes.length)];
     let offspring = crossoverGeneticCode(creature, parent2, variables);
     offspring = mutateGeneticCode(offspring, mutationRate, variables);
+    offspring.isOffspring = true; // Mark as offspring
 
     // Calculate initial spawn position within a specified radius
     const radius = 10; // Example radius
     const angle = Math.random() * 2 * Math.PI; // Random angle
     const distance = Math.random() * radius; // Random distance within radius
 
-    let newX = creature.x + distance * Math.cos(angle);
-    let newY = creature.y + distance * Math.sin(angle);
+    let newX = creature.geneticCode.x + distance * Math.cos(angle);
+    let newY = creature.geneticCode.y + distance * Math.sin(angle);
 
     // Ensure new position is within grid boundaries
     newX = Math.max(0, Math.min(newX, 790));
     newY = Math.max(0, Math.min(newY, 590));
 
-    offspring.x = newX;
-    offspring.y = newY;
+    offspring.geneticCode.x = newX;
+    offspring.geneticCode.y = newY;
 
-    console.log(`Creature ${creature.id} reproduced with ${parent2.id}. Offspring: ${offspring.id} at (${offspring.x}, ${offspring.y})`);
+    console.log(`Creature ${creature.id} reproduced with ${parent2.id}. Offspring: ${offspring.id} at (${offspring.geneticCode.x}, ${offspring.geneticCode.y})`);
     return offspring;
   }
   return null;
 };
 
-// Suppress unused variable warnings
-console.log(geneticVariables);
-console.log(predatorGeneticVariables);

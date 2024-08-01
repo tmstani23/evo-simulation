@@ -1,7 +1,4 @@
-// Import global variables to use them in helper functions
-import globalVariables from '../components/globalVariables';
 import { attemptReproduction } from '../genetics/geneticCodeTemplate';
-import { geneticVariables } from '../genetics/geneticVariables';
 
 // Helper function to calculate the movement of a creature or predator
 export const calculateMovement = (entity) => {
@@ -67,19 +64,17 @@ export const detectProximityToPrey = (setPredatorCodes, predatorCodesRef, setGen
   });
 };
 
-// Helper function to handle reproduction
-export const handleReproduction = (setGeneticCodes, geneticCodesRef, globalVariables) => {
-  setGeneticCodes(prevGeneticCodes => {
-    const newGeneticCodes = prevGeneticCodes.slice();
-    prevGeneticCodes.forEach(creature => {
-      const offspring = attemptReproduction(creature, prevGeneticCodes, globalVariables.mutationRate, globalVariables.reproductionRate, geneticVariables);
-      if (offspring) {
-        newGeneticCodes.push(offspring);
-      }
-    });
-    geneticCodesRef.current = newGeneticCodes;
-    return newGeneticCodes;
+// Helper function to handle reproduction for both prey and predators
+export const handleReproduction = (geneticCodes, geneticCodesRef, mutationRate, reproductionRate, variables) => {
+  const newGeneticCodes = geneticCodes.slice();
+  geneticCodes.forEach(creature => {
+    const offspring = attemptReproduction(creature, geneticCodes, mutationRate, reproductionRate, variables);
+    if (offspring) {
+      newGeneticCodes.push(offspring);
+    }
   });
+  geneticCodesRef.current = newGeneticCodes;
+  return newGeneticCodes;
 };
 
 // Helper function to apply health loss

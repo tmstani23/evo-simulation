@@ -8,10 +8,11 @@ const globalVariables = {
   foodRespawnInterval: 1500, // Respawn food every 1.5 seconds
   creatureCount: 50, // Initial number of creatures
   healthLossPerIntervalPrey: 0.2, // Health loss per interval for prey
-  reproductionRate: 0.004, // Probability of reproduction per interval for prey
+  reproductionRate: 0.004, // Recommended not to exceed 0.009 or sim will crash
 
   // Predator variables
-  predatorReproductionRate: 0.002, // Probability of reproduction per interval for predators
+  predatorReproductionRate: 0.002, // Recommended not to exceed 0.009 or sim will crash
+
   baseHealthLossFromPredator: 20, // Base health loss for prey when attacked by predators
   predatorHealthGain: 50, // Health gain for predators when they successfully consume prey
   initialPredatorCount: 10, // Initial number of predators

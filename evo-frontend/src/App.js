@@ -2,18 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { startSimulation, stopSimulation, resetSimulation } from './simulation/SimulationLogic';
 import { generateGeneticCode } from './genetics/geneticCodeTemplate';
 import { geneticVariables, predatorGeneticVariables } from './genetics/geneticVariables';
-import { generateUniqueId } from './genetics/utils'; // Correct import path
-import initialGlobalVariables from './components/globalVariables'; // Updated import path
+import { generateUniqueId } from './genetics/utils';
+import initialGlobalVariables from './components/globalVariables';
 import Grid from './components/Grid';
-import GlobalVariablesSliders from './components/GlobalVariablesSliders'; // Ensure single import
-import './App.css'; // Import global CSS file
+import GlobalVariablesSliders from './components/GlobalVariablesSliders';
+import './App.css';
 
 const App = () => {
-  // State for global variables
   const [globalVariables, setGlobalVariables] = useState(initialGlobalVariables);
-  const [isSimulationRunning, setIsSimulationRunning] = useState(false); // Track if the simulation is running
+  const [isSimulationRunning, setIsSimulationRunning] = useState(false);
 
-  // State for storing genetic codes of creatures, predators, food items, and debug mode
   const [geneticCodes, setGeneticCodes] = useState(
     Array.from({ length: globalVariables.creatureCount }, () => ({
       id: generateUniqueId(),
@@ -30,43 +28,37 @@ const App = () => {
   );
   const [foodItems, setFoodItems] = useState(
     Array.from({ length: globalVariables.initialFoodCount }, () => ({
+      id: generateUniqueId(), // Ensure unique ID for each food item
       x: Math.random() * 790,
       y: Math.random() * 590,
     }))
   );
-  const [debugMode, setDebugMode] = useState(false); // State for debug mode
+  const [debugMode, setDebugMode] = useState(false);
 
-  // Refs to keep track of the current state of genetic codes and food items
   const geneticCodesRef = useRef(geneticCodes);
   const predatorCodesRef = useRef(predatorCodes);
   const foodItemsRef = useRef(foodItems);
 
-  // Refs for managing simulation intervals
   const intervalRef = useRef(null);
   const foodIntervalRef = useRef(null);
 
-  // Function to toggle debug mode
   const toggleDebugMode = () => setDebugMode(!debugMode);
 
-  // Function to start the simulation
   const handleStartSimulation = () => {
     startSimulation(setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables);
     setIsSimulationRunning(true);
   };
 
-  // Function to stop the simulation
   const handleStopSimulation = () => {
     stopSimulation(intervalRef, foodIntervalRef);
     setIsSimulationRunning(false);
   };
 
-  // Function to reset the simulation
   const handleResetSimulation = () => {
     resetSimulation(setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables);
     setIsSimulationRunning(false);
   };
 
-  // Effect to clean up intervals on component unmount
   useEffect(() => {
     const currentIntervalRef = intervalRef.current;
     const currentFoodIntervalRef = foodIntervalRef.current;
@@ -77,7 +69,6 @@ const App = () => {
     };
   }, []);
 
-  // Render the main UI components
   return (
     <div className="app-container">
       <header className="app-header">Simulation Header</header>
@@ -86,9 +77,9 @@ const App = () => {
           <Grid creatures={geneticCodes} predators={predatorCodes} foodItems={foodItems} debugMode={debugMode} />
         </div>
         <div className="controls-container">
-          <button onClick={handleStartSimulation}>Start Simulation</button>
-          <button onClick={handleStopSimulation}>Stop Simulation</button>
-          <button onClick={handleResetSimulation}>Reset Simulation</button>
+          <button onClick={handleStartSimulation} disabled={isSimulationRunning}>Start Simulation</button>
+          <button onClick={handleStopSimulation} disabled={!isSimulationRunning}>Stop Simulation</button>
+          <button onClick={handleResetSimulation} disabled={isSimulationRunning}>Reset Simulation</button>
           <button onClick={toggleDebugMode}>Toggle Debug Mode</button>
         </div>
         <div className="sliders-container">
