@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+//components/GlobalVariablesSliders.js
+
 const GlobalVariablesSliders = ({ globalVariables, setGlobalVariables, disabled }) => {
   const [tooltip, setTooltip] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -55,8 +57,8 @@ const GlobalVariablesSliders = ({ globalVariables, setGlobalVariables, disabled 
           case 'creatureCount':
             min = 10; max = 100; step = 1; // Initial number of creatures: 10 to 100
             break;
-          case 'healthLossPerInterval':
-            min = 0.01; max = 1; step = 0.01; // Health loss per interval: 0.01 to 1 unit
+          case 'healthLossPerIntervalPrey':
+            min = 0.01; max = 0.1; step = 0.01; // Health loss per interval: 0.01 to 0.1 unit
             break;
           case 'reproductionRate':
             min = 0.001; max = 0.009; step = 0.001; // Adjust reproduction rate: 0.1% to 2%
@@ -76,8 +78,8 @@ const GlobalVariablesSliders = ({ globalVariables, setGlobalVariables, disabled 
           case 'predatorEatingRange':
             min = 1; max = 50; step = 1; // Predator eating range: 1 to 50 units
             break;
-          case 'predatorHealthLossPerInterval':
-            min = 0.01; max = 1; step = 0.01; // Predator health loss per interval: 0.01 to 1 unit
+          case 'healthLossPerIntervalPredator':
+            min = 0.01; max = 0.1; step = 0.01; // Predator health loss per interval: 0.01 to 0.1 unit
             break;
           default:
             min = 0; max = 10; step = 1; // Default range for unspecified variables

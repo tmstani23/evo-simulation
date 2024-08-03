@@ -1,22 +1,12 @@
 import { attemptReproduction } from '../genetics/geneticCodeTemplate';
 
-// Helper function to calculate the movement of a creature or predator
-export const calculateMovement = (entity) => {
-  const speed = entity.velocity.speed; // Get the speed of the entity
-  const direction = entity.velocity.direction; // Get the direction of the entity
-
-  // Validate speed and direction to ensure they are numbers
-  if (typeof speed !== 'number' || typeof direction !== 'number') {
-    console.error('Invalid speed or direction:', speed, direction);
-    return { deltaX: 0, deltaY: 0 };
-  }
-
-  // Convert the direction from degrees to radians for trigonometric calculations
-  const angle = direction * (Math.PI / 180);
-  const deltaX = speed * Math.cos(angle); // Calculate the change in X position
-  const deltaY = speed * Math.sin(angle); // Calculate the change in Y position
-
-  return { deltaX, deltaY }; // Return the calculated changes in position
+// Function to calculate movement based on genetic code
+export const calculateMovement = (geneticCode) => {
+  const { speed, direction } = geneticCode.velocity;
+  const radians = (Math.PI / 180) * direction; // Convert direction to radians
+  const deltaX = speed * Math.cos(radians);
+  const deltaY = speed * Math.sin(radians);
+  return { deltaX, deltaY };
 };
 
 // Helper function to detect if a creature is close to food and handle consumption
@@ -86,4 +76,18 @@ export const applyHealthLoss = (entities, healthLossPerInterval) => {
     }
     return entity;
   });
+};
+
+// Function to add position history
+export const addPositionHistory = (creature, position) => {
+  if (!creature.positionHistory) {
+    creature.positionHistory = [];
+  }
+  if (position && position.x != null && position.y != null) { // Ensure no null positions are added
+    creature.positionHistory.push(position);
+    // Optional: Limit history length to avoid memory issues
+    if (creature.positionHistory.length > 1000) {
+      creature.positionHistory.shift();
+    }
+  }
 };
