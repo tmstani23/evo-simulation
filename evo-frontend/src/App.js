@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { startSimulation, stopSimulation, resetSimulation } from './simulation/SimulationLogic';
 import { generateGeneticCode } from './genetics/geneticCodeTemplate';
 import { geneticVariables, predatorGeneticVariables } from './genetics/geneticVariables';
-import { generateUniqueId } from './genetics/utils';
+import { generateUniqueId } from './utils/generateUniqueId';
 import initialGlobalVariables from './components/globalVariables';
 import Grid from './components/Grid';
 import GlobalVariablesSliders from './components/GlobalVariablesSliders';
@@ -11,6 +11,7 @@ import './App.css';
 const App = () => {
   const [globalVariables, setGlobalVariables] = useState(initialGlobalVariables);
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
+  const [debugMode, setDebugMode] = useState(false);
 
   const [geneticCodes, setGeneticCodes] = useState(
     Array.from({ length: globalVariables.creatureCount }, () => ({
@@ -33,7 +34,6 @@ const App = () => {
       y: Math.random() * 590,
     }))
   );
-  const [debugMode, setDebugMode] = useState(false);
 
   const geneticCodesRef = useRef(geneticCodes);
   const predatorCodesRef = useRef(predatorCodes);
@@ -59,6 +59,13 @@ const App = () => {
     setIsSimulationRunning(false);
   };
 
+  const handleCreatureClick = (creature) => {
+    if (!isSimulationRunning) {
+      console.log('Clicked Creature:', creature);
+      console.log('Position History:', creature.positionHistory);
+    }
+  };
+
   useEffect(() => {
     const currentIntervalRef = intervalRef.current;
     const currentFoodIntervalRef = foodIntervalRef.current;
@@ -74,7 +81,7 @@ const App = () => {
       <header className="app-header">Simulation Header</header>
       <div className="main-content">
         <div className="grid-container">
-          <Grid creatures={geneticCodes} predators={predatorCodes} foodItems={foodItems} debugMode={debugMode} />
+          <Grid creatures={geneticCodes} predators={predatorCodes} foodItems={foodItems} debugMode={debugMode} onClickCreature={handleCreatureClick} />
         </div>
         <div className="controls-container">
           <button onClick={handleStartSimulation} disabled={isSimulationRunning}>Start Simulation</button>

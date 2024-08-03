@@ -1,44 +1,49 @@
-// Import statements at the top of SimulationLogic.js
 import { attemptReproduction } from '../genetics/geneticCodeTemplate';
 import { generateGeneticCode } from '../genetics/geneticCodeTemplate';
 import { geneticVariables, predatorGeneticVariables } from '../genetics/geneticVariables';
-import globalVariables from '../components/globalVariables';
-import { calculateMovement, detectProximityToFood, detectProximityToPrey, applyHealthLoss } from './SimulationHelpers';
-import { generateUniqueId } from '../genetics/utils'; // Add this import statement
+import { calculateMovement, detectProximityToFood, detectProximityToPrey, applyHealthLoss, addPositionHistory } from './SimulationHelpers';
+import { generateUniqueId } from '../utils/generateUniqueId';
+import normalizeDirection from '../utils/normalizeDirection';
 
 // Function to start the simulation
 export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables) => {
-  console.log('Starting simulation with global variables:', globalVariables);
+  console.log('Starting simulation with global variables:', JSON.stringify(globalVariables));
 
   intervalRef.current = setInterval(() => {
     setGeneticCodes(prevGeneticCodes => {
-      // Apply health loss and calculate movement
       const updatedGeneticCodes = applyHealthLoss(prevGeneticCodes, globalVariables.healthLossPerIntervalPrey)
         .map(creature => {
-          const { deltaX, deltaY } = calculateMovement(creature.geneticCode);
-          let newX = creature.geneticCode.x + deltaX;
-          let newY = creature.geneticCode.y + deltaY;
-    
+          // Ensure immutability
+          const newCreature = { ...creature, geneticCode: { ...creature.geneticCode, velocity: { ...creature.geneticCode.velocity } } };
+          const { deltaX, deltaY } = calculateMovement(newCreature.geneticCode);
+          let newX = newCreature.geneticCode.x + deltaX;
+          let newY = newCreature.geneticCode.y + deltaY;
+          let newDirection = normalizeDirection(newCreature.geneticCode.velocity.direction);
+
+          // Ensure the new direction is normalized
+          newCreature.geneticCode.velocity.direction = newDirection;
+
           if (newX < 0 || newX > 790) {
-            creature.geneticCode.velocity.direction = 180 - creature.geneticCode.velocity.direction;
+            newDirection = normalizeDirection(180 - newCreature.geneticCode.velocity.direction);
             newX = Math.max(0, Math.min(newX, 790));
           }
           if (newY < 0 || newY > 590) {
-            creature.geneticCode.velocity.direction = 360 - creature.geneticCode.velocity.direction;
+            newDirection = normalizeDirection(360 - newCreature.geneticCode.velocity.direction);
             newY = Math.max(0, Math.min(newY, 590));
           }
-    
-          creature.geneticCode.x = newX;
-          creature.geneticCode.y = newY;
-          return creature;
+
+          newCreature.geneticCode.x = newX;
+          newCreature.geneticCode.y = newY;
+          newCreature.geneticCode.velocity.direction = newDirection;
+
+          // Add position to history
+          addPositionHistory(newCreature, { x: newX, y: newY });
+
+          return newCreature;
         })
         .filter(creature => creature.health.current > 0);
 
-      // Log updated genetic codes after movement calculation
-      console.log('Updated Genetic Codes after movement:', updatedGeneticCodes);
-    
-      // Integrate reproduction logic
-      const newGeneticCodes = updatedGeneticCodes.slice(); // Clone the array to avoid direct mutation
+      const newGeneticCodes = updatedGeneticCodes.slice();
       updatedGeneticCodes.forEach(creature => {
         const offspring = attemptReproduction(creature, updatedGeneticCodes, globalVariables.mutationRate, globalVariables.reproductionRate, geneticVariables);
         if (offspring) {
@@ -46,9 +51,6 @@ export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems,
         }
       });
 
-      // Log new genetic codes after offspring generation
-      console.log('New Genetic Codes after reproduction:', newGeneticCodes);
-    
       geneticCodesRef.current = newGeneticCodes;
       return newGeneticCodes;
     });
@@ -56,30 +58,37 @@ export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems,
     setPredatorCodes(prevPredatorCodes => {
       const updatedPredatorCodes = applyHealthLoss(prevPredatorCodes, globalVariables.healthLossPerIntervalPredator)
         .map(predator => {
-          const { deltaX, deltaY } = calculateMovement(predator.geneticCode);
-          let newX = predator.geneticCode.x + deltaX;
-          let newY = predator.geneticCode.y + deltaY;
+          // Ensure immutability
+          const newPredator = { ...predator, geneticCode: { ...predator.geneticCode, velocity: { ...predator.geneticCode.velocity } } };
+          const { deltaX, deltaY } = calculateMovement(newPredator.geneticCode);
+          let newX = newPredator.geneticCode.x + deltaX;
+          let newY = newPredator.geneticCode.y + deltaY;
+          let newDirection = normalizeDirection(newPredator.geneticCode.velocity.direction);
+
+          // Ensure the new direction is normalized
+          newPredator.geneticCode.velocity.direction = newDirection;
 
           if (newX < 0 || newX > 790) {
-            predator.geneticCode.velocity.direction = 180 - predator.geneticCode.velocity.direction;
+            newDirection = normalizeDirection(180 - newPredator.geneticCode.velocity.direction);
             newX = Math.max(0, Math.min(newX, 790));
           }
           if (newY < 0 || newY > 590) {
-            predator.geneticCode.velocity.direction = 360 - predator.geneticCode.velocity.direction;
+            newDirection = normalizeDirection(360 - newPredator.geneticCode.velocity.direction);
             newY = Math.max(0, Math.min(newY, 590));
           }
 
-          predator.geneticCode.x = newX;
-          predator.geneticCode.y = newY;
-          return predator;
+          newPredator.geneticCode.x = newX;
+          newPredator.geneticCode.y = newY;
+          newPredator.geneticCode.velocity.direction = newDirection;
+
+          // Add position to history
+          addPositionHistory(newPredator, { x: newX, y: newY });
+
+          return newPredator;
         })
         .filter(predator => predator.health.current > 0);
 
-      // Log updated predator codes after movement calculation
-      console.log('Updated Predator Codes after movement:', updatedPredatorCodes);
-
-      // Integrate reproduction logic for predators
-      const newPredatorCodes = updatedPredatorCodes.slice(); // Clone the array to avoid direct mutation
+      const newPredatorCodes = updatedPredatorCodes.slice();
       updatedPredatorCodes.forEach(predator => {
         const offspring = attemptReproduction(predator, updatedPredatorCodes, globalVariables.mutationRate, globalVariables.predatorReproductionRate, predatorGeneticVariables);
         if (offspring) {
@@ -87,17 +96,8 @@ export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems,
         }
       });
 
-      // Log new predator codes after offspring generation
-      console.log('New Predator Codes after reproduction:', newPredatorCodes);
-
       predatorCodesRef.current = newPredatorCodes;
       return newPredatorCodes;
-    });
-
-    setFoodItems(prevFoodItems => {
-      const updatedFoodItems = prevFoodItems.map(food => food);
-      foodItemsRef.current = updatedFoodItems;
-      return updatedFoodItems;
     });
 
     detectProximityToFood(setGeneticCodes, geneticCodesRef, setFoodItems, foodItemsRef, globalVariables);
@@ -108,7 +108,7 @@ export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems,
   foodIntervalRef.current = setInterval(() => {
     setFoodItems(prevFoodItems => {
       const newFoodItems = Array.from({ length: globalVariables.foodRespawnRate }, () => ({
-        id: generateUniqueId(), // Ensure unique ID for each food item
+        id: generateUniqueId(),
         x: Math.random() * 790,
         y: Math.random() * 590,
       }));
@@ -138,7 +138,7 @@ export const resetSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems,
     health: { current: Math.floor(Math.random() * (predatorGeneticVariables.health.max - predatorGeneticVariables.health.min + 1)) + predatorGeneticVariables.health.min, max: predatorGeneticVariables.health.max }
   }));
   const newFoodItems = Array.from({ length: globalVariables.initialFoodCount }, () => ({
-    id: generateUniqueId(), // Ensure unique ID for each food item
+    id: generateUniqueId(),
     x: Math.random() * 790,
     y: Math.random() * 590,
   }));
