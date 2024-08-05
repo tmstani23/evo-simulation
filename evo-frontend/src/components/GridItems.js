@@ -1,7 +1,5 @@
 import React from 'react';
 
-//components/GridItems.js
-
 // Function to calculate the size of a creature or predator based on its health
 const getSizeFromHealth = (health, minSize, maxSize, minHealth, maxHealth) => {
   return ((health - minHealth) / (maxHealth - minHealth)) * (maxSize - minSize) + minSize;
@@ -12,14 +10,14 @@ export const FoodItem = ({ food }) => (
   <div className="food" style={{ left: `${food.x}px`, top: `${food.y}px` }}></div>
 );
 
-export const Creature = ({ creature, debugMode, onClick }) => {
+export const Creature = ({ creature, debugMode, onClick, onMouseEnter, onMouseLeave, onMouseMove, isHovered }) => {
   const size = getSizeFromHealth(creature.health.current, 5, 20, 0, 100);
   const { x, y, velocity, vision, strength } = creature.geneticCode;
   const backgroundColor = creature.isOffspring ? '#ff9999' : '#e74c3c';
 
   return (
     <div
-      className="creature"
+      className={`creature ${isHovered ? 'hovered' : ''}`}
       style={{
         left: `${x}px`,
         top: `${y}px`,
@@ -30,8 +28,11 @@ export const Creature = ({ creature, debugMode, onClick }) => {
         borderRadius: '50%',
       }}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onMouseMove={onMouseMove}
     >
-      {debugMode && (
+      {debugMode && velocity && (
         <>
           <div
             className="arrow"
@@ -58,14 +59,14 @@ export const Creature = ({ creature, debugMode, onClick }) => {
 };
 
 // Predator Component
-export const Predator = ({ predator, debugMode, onClick }) => {
+export const Predator = ({ predator, debugMode, onClick, onMouseEnter, onMouseLeave, onMouseMove, isHovered }) => {
   const size = getSizeFromHealth(predator.health.current, 5, 20, 50, 150);
   const { x, y, velocity, vision, strength } = predator.geneticCode;
-  const backgroundColor = predator.isOffspring ? '#00008B' : '#3498db';
+  const backgroundColor = predator.isOffspring ? '#add8e6' : '#3498db';
 
   return (
     <div
-      className="creature"
+      className={`creature predator ${isHovered ? 'hovered' : ''}`}
       style={{
         left: `${x}px`,
         top: `${y}px`,
@@ -76,8 +77,11 @@ export const Predator = ({ predator, debugMode, onClick }) => {
         borderRadius: '50%',
       }}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onMouseMove={onMouseMove}
     >
-      {debugMode && (
+      {debugMode && velocity && (
         <>
           <div
             className="arrow"
