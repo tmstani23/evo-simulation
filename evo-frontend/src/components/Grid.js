@@ -9,10 +9,15 @@ const Grid = ({ creatures, predators, foodItems, debugMode, onClickCreature }) =
 
   const handleMouseEnter = (e, creature) => {
     setHoveredCreature(creature.id);
-    const velocityInfo = creature.velocity
-      ? `\nSpeed: ${creature.velocity.speed.toFixed(2)}\nDirection: ${creature.velocity.direction.toFixed(2)}`
+
+    const velocity = creature.geneticCode.velocity || { speed: 0, direction: 0 };
+
+    const velocityInfo = `\nSpeed: ${velocity.speed ? velocity.speed.toFixed(2) : 'N/A'}\nDirection: ${velocity.direction ? velocity.direction.toFixed(2) : 'N/A'}`;
+    const genomeInfo = creature.geneticCode
+      ? `\nVision: ${creature.geneticCode.vision.toFixed(2)}\nStrength: ${creature.geneticCode.strength.toFixed(2)}`
       : '';
-    setTooltipContent(`ID: ${creature.id}\nHealth: ${creature.health.current}/${creature.health.max}${velocityInfo}`);
+
+    setTooltipContent(`ID: ${creature.id}\nHealth: ${creature.health.current}/${creature.health.max}${velocityInfo}${genomeInfo}`);
     setTooltipPosition({ top: e.clientY + 10, left: e.clientX + 10 });
   };
 
