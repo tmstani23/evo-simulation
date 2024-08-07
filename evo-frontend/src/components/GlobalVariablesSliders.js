@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 
-//components/GlobalVariablesSliders.js
-
 const GlobalVariablesSliders = ({ globalVariables, setGlobalVariables, disabled }) => {
   const [tooltip, setTooltip] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const [showRestartMessage, setShowRestartMessage] = useState(false); // Track if a slider was adjusted
+  const [showRestartMessage, setShowRestartMessage] = useState(false);
 
   const handleSliderChange = (e) => {
     const { name, value } = e.target;
@@ -13,7 +11,7 @@ const GlobalVariablesSliders = ({ globalVariables, setGlobalVariables, disabled 
       ...prev,
       [name]: parseFloat(value)
     }));
-    setShowRestartMessage(true); // Show message when slider is adjusted
+    setShowRestartMessage(true);
     console.log(`Updated ${name} to ${value}`);
   };
 
@@ -48,65 +46,64 @@ const GlobalVariablesSliders = ({ globalVariables, setGlobalVariables, disabled 
   };
 
   return (
-    <div className="sliders-container">
-      {showRestartMessage && !disabled && <div className="restart-message">Restart the simulation to apply the new settings.</div>}
+    <div className="w-full lg:w-1/2 p-4 bg-gray-800 text-white rounded-lg mx-auto">
+      {showRestartMessage && !disabled && <div className="restart-message text-center mb-4 p-2 bg-yellow-500 rounded">Restart the simulation to apply the new settings.</div>}
       {Object.keys(globalVariables).map((key) => {
-        // Define min, max, and step values based on the specific global variable
         let min, max, step;
         switch (key) {
           case 'mutationRate':
-            min = 0.01; max = 0.1; step = 0.01; // Mutation rate range: 1% to 10%
+            min = 0.01; max = 0.1; step = 0.01;
             break;
           case 'eatingRange':
-            min = 1; max = 50; step = 1; // Eating range: 1 to 50 units
+            min = 1; max = 50; step = 1;
             break;
           case 'foodHealthAmount':
-            min = 10; max = 100; step = 1; // Health gained from food: 10 to 100 units
+            min = 10; max = 100; step = 1;
             break;
           case 'initialFoodCount':
-            min = 10; max = 300; step = 1; // Initial number of food items: 10 to 300
+            min = 10; max = 300; step = 1;
             break;
           case 'foodRespawnRate':
-            min = 1; max = 50; step = 1; // Food respawn amount: 1 to 50 items per interval
+            min = 1; max = 50; step = 1;
             break;
           case 'foodRespawnInterval':
-            min = 500; max = 5000; step = 100; // Food respawn interval: 500 to 5000 milliseconds
+            min = 500; max = 5000; step = 100;
             break;
           case 'creatureCount':
-            min = 10; max = 100; step = 1; // Initial number of creatures: 10 to 100
+            min = 10; max = 100; step = 1;
             break;
           case 'healthLossPerIntervalPrey':
-            min = 0.01; max = 0.2; step = 0.01; // Health loss per interval: 0.01 to 0.2 units
+            min = 0.01; max = 0.2; step = 0.01;
             break;
           case 'reproductionRate':
-            min = 0.001; max = 0.005; step = 0.001; // Adjust reproduction rate: 0.1% to 0.5%
+            min = 0.001; max = 0.005; step = 0.001;
             break;
           case 'predatorReproductionRate':
-            min = 0.001; max = 0.005; step = 0.001; // Adjust predator reproduction rate: 0.1% to 0.5%
+            min = 0.001; max = 0.005; step = 0.001;
             break;
           case 'baseHealthLossFromPredator':
-            min = 10; max = 100; step = 1; // Amount of health damage predators do to prey: 10 to 100 units
+            min = 10; max = 100; step = 1;
             break;
           case 'predatorHealthGain':
-            min = 10; max = 100; step = 1; // Predator health gain: 10 to 100 units
+            min = 10; max = 100; step = 1;
             break;
           case 'initialPredatorCount':
-            min = 1; max = 50; step = 1; // Initial number of predators: 1 to 50
+            min = 1; max = 50; step = 1;
             break;
           case 'predatorEatingRange':
-            min = 1; max = 50; step = 1; // Predator eating range: 1 to 50 units
+            min = 1; max = 50; step = 1;
             break;
           case 'healthLossPerIntervalPredator':
-            min = 0.01; max = 0.2; step = 0.01; // Predator health loss per interval: 0.01 to 0.2 units
+            min = 0.01; max = 0.2; step = 0.01;
             break;
           default:
-            min = 0; max = 10; step = 1; // Default range for unspecified variables
+            min = 0; max = 10; step = 1;
             break;
         }
 
         return (
-          <div key={key} className="slider-control" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <label htmlFor={key}>
+          <div key={key} className="slider-control mb-4" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            <label htmlFor={key} className="block mb-1">
               {`${variableLabels[key]}: ${globalVariables[key]}`}
             </label>
             <input
@@ -119,13 +116,14 @@ const GlobalVariablesSliders = ({ globalVariables, setGlobalVariables, disabled 
               value={globalVariables[key]}
               onChange={handleSliderChange}
               disabled={disabled}
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             />
           </div>
         );
       })}
-      {tooltip && <div className="tooltip" style={{ top: `${tooltipPosition.top}px`, left: `${tooltipPosition.left}px` }}>{tooltip}</div>}
+      {tooltip && <div className="tooltip fixed bg-gray-700 text-white p-2 rounded z-50" style={{ top: `${tooltipPosition.top}px`, left: `${tooltipPosition.left}px` }}>{tooltip}</div>}
     </div>
   );
 };

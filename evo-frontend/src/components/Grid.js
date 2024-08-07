@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Creature, Predator, FoodItem } from './GridItems';
 import '../App.css';
 
-const Grid = ({ creatures, predators, foodItems, debugMode, onClickCreature }) => {
+const Grid = ({ creatures, predators, foodItems, debugMode, onClickCreature, setGridDimensions }) => {
+  const gridRef = useRef(null);
   const [hoveredCreature, setHoveredCreature] = useState(null);
   const [tooltipContent, setTooltipContent] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (gridRef.current) {
+      setGridDimensions({
+        width: gridRef.current.offsetWidth,
+        height: gridRef.current.offsetHeight,
+      });
+    }
+  }, [setGridDimensions]);
 
   const handleMouseEnter = (e, creature) => {
     setHoveredCreature(creature.id);
@@ -31,8 +41,8 @@ const Grid = ({ creatures, predators, foodItems, debugMode, onClickCreature }) =
   };
 
   return (
-    <div className="grid">
-      <div className="grid-content">
+    <div className="relative w-full h-full lg:w-[800px] lg:h-[600px]" ref={gridRef}>
+      <div className="grid-content absolute inset-0">
         {foodItems.map(food => (
           <FoodItem key={food.id} food={food} />
         ))}
@@ -59,7 +69,7 @@ const Grid = ({ creatures, predators, foodItems, debugMode, onClickCreature }) =
           />
         ))}
         {tooltipContent && (
-          <div className="creature-tooltip" style={{ top: tooltipPosition.top, left: tooltipPosition.left }}>
+          <div className="creature-tooltip fixed" style={{ top: tooltipPosition.top, left: tooltipPosition.left }}>
             {tooltipContent.split('\n').map((line, index) => (
               <div key={index}>{line}</div>
             ))}

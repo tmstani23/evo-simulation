@@ -1,3 +1,5 @@
+// simulation/SimulationLogic.js
+
 import { attemptReproduction } from '../genetics/geneticCodeTemplate';
 import { generateGeneticCode } from '../genetics/geneticCodeTemplate';
 import { geneticVariables, predatorGeneticVariables } from '../genetics/geneticVariables';
@@ -6,7 +8,7 @@ import { generateUniqueId } from '../utils/generateUniqueId';
 import normalizeDirection from '../utils/normalizeDirection';
 
 // Function to start the simulation
-export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables) => {
+export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables, gridDimensions) => {
   console.log('Starting simulation with global variables:', JSON.stringify(globalVariables));
 
   intervalRef.current = setInterval(() => {
@@ -23,18 +25,24 @@ export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems,
           // Ensure the new direction is normalized
           newCreature.geneticCode.velocity.direction = newDirection;
 
-          if (newX < 0 || newX > 790) {
+          console.log(`Creature ID: ${creature.id}, newX: ${newX}, newY: ${newY}, gridWidth: ${gridDimensions.width}, gridHeight: ${gridDimensions.height}`);
+
+          // Update the condition checks for right and bottom boundaries
+          if (newX < 0 || newX >= gridDimensions.width) {
+            console.log(`Creature ID: ${creature.id} hit the vertical boundary`);
             newDirection = normalizeDirection(180 - newCreature.geneticCode.velocity.direction);
-            newX = Math.max(0, Math.min(newX, 790));
+            newX = Math.max(0, Math.min(newX, gridDimensions.width - 1));
+            newCreature.geneticCode.velocity.direction = newDirection;
           }
-          if (newY < 0 || newY > 590) {
+          if (newY < 0 || newY >= gridDimensions.height) {
+            console.log(`Creature ID: ${creature.id} hit the horizontal boundary`);
             newDirection = normalizeDirection(360 - newCreature.geneticCode.velocity.direction);
-            newY = Math.max(0, Math.min(newY, 590));
+            newY = Math.max(0, Math.min(newY, gridDimensions.height - 1));
+            newCreature.geneticCode.velocity.direction = newDirection;
           }
 
           newCreature.geneticCode.x = newX;
           newCreature.geneticCode.y = newY;
-          newCreature.geneticCode.velocity.direction = newDirection;
 
           // Add position to history
           addPositionHistory(newCreature, { x: newX, y: newY });
@@ -68,18 +76,24 @@ export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems,
           // Ensure the new direction is normalized
           newPredator.geneticCode.velocity.direction = newDirection;
 
-          if (newX < 0 || newX > 790) {
+          console.log(`Predator ID: ${predator.id}, newX: ${newX}, newY: ${newY}, gridWidth: ${gridDimensions.width}, gridHeight: ${gridDimensions.height}`);
+
+          // Update the condition checks for right and bottom boundaries
+          if (newX < 0 || newX >= gridDimensions.width) {
+            console.log(`Predator ID: ${predator.id} hit the vertical boundary`);
             newDirection = normalizeDirection(180 - newPredator.geneticCode.velocity.direction);
-            newX = Math.max(0, Math.min(newX, 790));
+            newX = Math.max(0, Math.min(newX, gridDimensions.width - 1));
+            newPredator.geneticCode.velocity.direction = newDirection;
           }
-          if (newY < 0 || newY > 590) {
+          if (newY < 0 || newY >= gridDimensions.height) {
+            console.log(`Predator ID: ${predator.id} hit the horizontal boundary`);
             newDirection = normalizeDirection(360 - newPredator.geneticCode.velocity.direction);
-            newY = Math.max(0, Math.min(newY, 590));
+            newY = Math.max(0, Math.min(newY, gridDimensions.height - 1));
+            newPredator.geneticCode.velocity.direction = newDirection;
           }
 
           newPredator.geneticCode.x = newX;
           newPredator.geneticCode.y = newY;
-          newPredator.geneticCode.velocity.direction = newDirection;
 
           // Add position to history
           addPositionHistory(newPredator, { x: newX, y: newY });
@@ -109,8 +123,8 @@ export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems,
     setFoodItems(prevFoodItems => {
       const newFoodItems = Array.from({ length: globalVariables.foodRespawnRate }, () => ({
         id: generateUniqueId(),
-        x: Math.random() * 790,
-        y: Math.random() * 590,
+        x: Math.random() * gridDimensions.width,
+        y: Math.random() * gridDimensions.height,
       }));
       const updatedFoodItems = [...prevFoodItems, ...newFoodItems];
       foodItemsRef.current = updatedFoodItems;
@@ -126,7 +140,7 @@ export const stopSimulation = (intervalRef, foodIntervalRef) => {
 };
 
 // Function to reset the simulation
-export const resetSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables) => {
+export const resetSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables, gridDimensions) => {
   const newGeneticCodes = Array.from({ length: globalVariables.creatureCount }, () => ({
     id: generateUniqueId(),
     geneticCode: generateGeneticCode(geneticVariables),
@@ -135,12 +149,12 @@ export const resetSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems,
   const newPredatorCodes = Array.from({ length: globalVariables.initialPredatorCount }, () => ({
     id: generateUniqueId(),
     geneticCode: generateGeneticCode(predatorGeneticVariables),
-    health: { current: Math.floor(Math.random() * (predatorGeneticVariables.health.max - predatorGeneticVariables.health.min + 1)) + predatorGeneticVariables.health.min, max: predatorGeneticVariables.health.max }
+    health: { current: Math.floor(Math.random() * (predatorGeneticVariables.health.max - geneticVariables.health.min + 1)) + predatorGeneticVariables.health.min, max: predatorGeneticVariables.health.max }
   }));
   const newFoodItems = Array.from({ length: globalVariables.initialFoodCount }, () => ({
     id: generateUniqueId(),
-    x: Math.random() * 790,
-    y: Math.random() * 590,
+    x: Math.random() * gridDimensions.width,
+    y: Math.random() * gridDimensions.height,
   }));
   setGeneticCodes(newGeneticCodes);
   setPredatorCodes(newPredatorCodes);

@@ -1,3 +1,4 @@
+// App.js
 import React, { useState, useEffect, useRef } from 'react';
 import { startSimulation, stopSimulation, resetSimulation } from './simulation/SimulationLogic';
 import { generateGeneticCode } from './genetics/geneticCodeTemplate';
@@ -15,6 +16,7 @@ const App = () => {
   const [debugMode, setDebugMode] = useState(false);
   const [tooltip, setTooltip] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const [gridDimensions, setGridDimensions] = useState({ width: 800, height: 600 });
 
   const [geneticCodes, setGeneticCodes] = useState(
     Array.from({ length: globalVariables.creatureCount }, () => ({
@@ -48,7 +50,7 @@ const App = () => {
   const toggleDebugMode = () => setDebugMode(!debugMode);
 
   const handleStartSimulation = () => {
-    startSimulation(setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables);
+    startSimulation(setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables, gridDimensions);
     setIsSimulationRunning(true);
   };
 
@@ -59,7 +61,7 @@ const App = () => {
   };
 
   const handleResetSimulation = () => {
-    resetSimulation(setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables);
+    resetSimulation(setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables, gridDimensions);
     setIsSimulationRunning(false);
     setIsPaused(false);
   };
@@ -116,6 +118,7 @@ const App = () => {
               onClickCreature={handleCreatureClick}
               onHoverCreature={handleCreatureHover}
               onMouseLeaveCreature={handleCreatureMouseLeave}
+              setGridDimensions={setGridDimensions}
             />
           </div>
           <div className="controls-container">
