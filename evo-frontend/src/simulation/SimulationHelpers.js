@@ -1,3 +1,5 @@
+// simulation/SimulationHelpers.js
+
 import { attemptReproduction } from '../genetics/geneticCodeTemplate';
 
 // Function to calculate movement based on genetic code

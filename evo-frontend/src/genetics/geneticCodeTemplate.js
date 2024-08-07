@@ -1,3 +1,5 @@
+//genetics/geneticCodeTemplate.js
+
 import { generateUniqueId } from '../utils/generateUniqueId';
 import normalizeDirection from '../utils/normalizeDirection';
 
