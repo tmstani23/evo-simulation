@@ -1,5 +1,6 @@
 // App.js
 import React, { useState, useEffect, useRef } from 'react';
+import geneticSymbol from './images/geneticSymbol.png'; 
 import { startSimulation, stopSimulation, resetSimulation } from './simulation/SimulationLogic';
 import { generateGeneticCode } from './genetics/geneticCodeTemplate';
 import { geneticVariables, predatorGeneticVariables } from './genetics/geneticVariables';
@@ -94,20 +95,26 @@ const App = () => {
   }, []);
 
   return (
-    <div className="app-container">
-      <header className="app-header">Simulation Header</header>
-      <div className="key-and-main-content">
-        <div className="simulation-key">
-          <h3>Simulation Key</h3>
-          <div className="key-item"><div className="key-color creature-color"></div>Creatures</div>
-          <div className="key-item"><div className="key-color predator-color"></div>Predators</div>
-          <div className="key-item"><div className="key-color food-color"></div>Food</div>
-          <div className="key-item"><div className="key-color creature-offspring-color"></div>Creature Offspring</div>
-          <div className="key-item"><div className="key-color predator-offspring-color"></div>Predator Offspring</div>
-          <h4>Debug Mode</h4>
-          <div className="debug-item"><div className="vision-indicator"></div>Vision</div>
-          <div className="debug-item"><div className="speed-indicator"></div>Speed</div>
+    <div className="app-container pt-20 pb-16">
+      <header className="w-full bg-teal-500 text-white py-4 flex justify-between items-center fixed top-0 z-50 px-4">
+        <div className="flex items-center space-x-4">
+          <img src={geneticSymbol} alt="EvoLife Logo" className="h-20 w-20 rounded-full" /> 
         </div>
+        <h1 className="text-6xl font-bold flex-grow text-center font-poppins">EvoLife</h1>
+      </header>
+      <div className="key-and-main-content">
+      <div className="simulation-key">
+  <h3>Simulation Key</h3>
+  <div className="key-item"><div className="key-color creature-color"></div>Creatures</div>
+  <div className="key-item"><div className="key-color predator-color"></div>Predators</div>
+  <div className="key-item"><div className="key-color food-color"></div>Food</div>
+  <div className="key-item"><div className="key-color creature-offspring-color"></div>Creature Offspring</div>
+  <div className="key-item"><div className="key-color predator-offspring-color"></div>Predator Offspring</div>
+  <h4>Debug Mode</h4>
+  <div className="debug-item"><div className="vision-indicator"></div>Vision</div>
+  <div className="debug-item"><div className="speed-indicator"></div>Speed</div>
+  <div className="debug-item"><div className="arrow-width"></div>Arrow Width = Strength</div>
+</div>
         <div className="main-content">
           <div className="grid-container">
             <Grid
@@ -132,7 +139,21 @@ const App = () => {
           </div>
         </div>
       </div>
-      <footer className="app-footer">Simulation Footer</footer>
+      <footer className="w-full bg-teal-500 text-white py-4 flex flex-col md:flex-row justify-center items-center fixed bottom-0 z-50 px-4">
+        <div className="text-center">
+          <p className="text-sm">&copy; 2024 EvoLife. All rights reserved.</p>
+          <p>Contact us: <a href="mailto:thriveloomhq@gmail.com" className="underline">thriveloomhq@gmail.com</a></p>
+        </div>
+        <div className="flex space-x-4 mt-2 md:mt-0 ml-4 md:ml-8">
+          <a href="https://x.com/ThriveLoom" target="_blank" rel="noopener noreferrer">
+            <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.949.555-2.005.959-3.127 1.184-.897-.957-2.178-1.555-3.594-1.555-2.723 0-4.928 2.205-4.928 4.929 0 .39.043.765.127 1.124-4.094-.205-7.725-2.165-10.148-5.144-.424.725-.666 1.561-.666 2.452 0 1.69.86 3.179 2.168 4.053-.798-.026-1.55-.245-2.204-.614v.061c0 2.364 1.68 4.337 3.914 4.782-.409.111-.839.171-1.284.171-.313 0-.616-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.417-1.684 1.318-3.809 2.106-6.102 2.106-.396 0-.786-.023-1.172-.068 2.179 1.398 4.768 2.212 7.557 2.212 9.054 0 14-7.496 14-13.986 0-.21 0-.423-.015-.634.962-.695 1.797-1.562 2.457-2.549z" />
+            </svg>
+          </a>
+        </div>
+      </footer>
+
+
       {tooltip && (
         <div className="creature-tooltip" style={{ top: `${tooltipPosition.top}px`, left: `${tooltipPosition.left}px` }}>
           <div>ID: {tooltip.id}</div>

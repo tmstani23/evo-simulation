@@ -1,4 +1,13 @@
 /* Existing CSS content /src/App.css */
+/* Tailwind CSS already takes care of most styling */
+/* Ensure Tailwind is imported in your project */
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -15,99 +24,110 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%; /* Ensure full width */
-  padding-top: 80px; /* Add space for the header */
-  padding-bottom: 80px; /* Add space for the footer */
-  background-color: #2c3e50; /* Match the background color */
-}
-
-.app-header, .app-footer {
-  background-color: #2980b9; /* Header and footer background color */
   width: 100%;
-  padding: 10px 0;
-  text-align: center;
-  color: white;
-  position: fixed; /* Make the header and footer stick to the top and bottom */
-  left: 0;
-  z-index: 1000;
+  padding-top: 100px; /* Ensure enough space for the header and the key's margin */
+  padding-bottom: 80px;
+  background-color: #2c3e50;
 }
 
-.app-header {
-  top: 0;
-}
-
-.app-footer {
-  bottom: 0;
-}
 
 .key-and-main-content {
   display: flex;
   flex-direction: row;
   width: 100%;
   justify-content: center;
+  flex-wrap: wrap; /* Allow items to wrap */
 }
 
 .simulation-key {
-  position: fixed;
-  left: 10px;
-  top: 100px; /* Adjust based on your layout */
-  background-color: #2c3e50; /* Match background color */
+  margin-top: 40px; /* Add margin at the top to ensure it's not hidden by the header */
+  background-color: #2c3e50;
   color: white;
-  padding: 10px;
-  border-radius: 5px;
-  z-index: 1000;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  margin-right: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .simulation-key h3, .simulation-key h4 {
   margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #3498db; /* Match button color */
 }
 
 .simulation-key .key-item, .simulation-key .debug-item {
   display: flex;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  font-size: 14px;
 }
 
 .simulation-key .key-color, .simulation-key .vision-indicator {
-  width: 15px;
-  height: 15px;
-  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
   border-radius: 50%;
 }
 
+.simulation-key .debug-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.simulation-key .arrow-width {
+  width: 20px;
+  height: 6px; /* Use a default width for illustration */
+  background-color: #3498db; /* Blue color for arrows */
+  margin-right: 10px;
+}
+
 .simulation-key .vision-indicator {
-  border: 1px solid #f39c12; /* Yellow color for vision */
+  
+  border: 2px solid #f39c12; /* Yellow color for vision */
   background-color: transparent; /* Ensure the circle is hollow */
+  margin-right: 10px;
 }
 
 .simulation-key .speed-indicator {
-  width: 15px;
-  height: 2px;
+  width: 20px;
+  height: 3px;
   background-color: #3498db; /* Blue color for speed */
+  margin-right: 10px;
 }
 
 .simulation-key .creature-color {
-  background-color: #e74c3c; /* Red color for creatures */
+  background-color: #00d1d1; /* Cyan for creatures */
 }
 
 .simulation-key .predator-color {
-  background-color: #3498db; /* Blue color for predators */
+  background-color: #d100d1; /* Magenta for predators */
 }
 
 .simulation-key .food-color {
-  background-color: #27ae60; /* Green color for food */
+  background-color: #FFA500; /* Orange for food */
+  width: 20px; /* Ensure the food item is a square */
+  height: 20px; /* Ensure the food item is a square */
+  border-radius: 0; /* Remove rounded corners for square shape */
 }
 
 .simulation-key .creature-offspring-color {
-  background-color: #ffcccc; /* Light red color for creature offspring */
+  background-color: #ccf7f7; /* Very light cyan for creature offspring */
 }
 
 .simulation-key .predator-offspring-color {
-  background-color: #add8e6; /* Light blue color for predator offspring */
+  background-color: #f7ccf7; /* Very light magenta for predator offspring */
 }
 
 .main-content {
-  margin-top: 100px; /* Ensure space at the top */
+  margin-top: 40px; /* Reduced space at the top */
   margin-bottom: 60px; /* Add some space at the bottom */
   width: 800px; /* Ensure consistent width */
   display: flex;
@@ -137,6 +157,11 @@ body {
   justify-content: space-between;
   width: 800px;
   flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+}
+
+.controls-container button {
+  flex: 1; /* Ensure buttons take equal space */
+  margin: 5px;
 }
 
 .sliders-container {
@@ -170,7 +195,7 @@ button:hover {
 
 .creature {
   position: absolute;
-  background-color: #e74c3c; /* Red color for creatures */
+  background-color: #00d1d1;
   border-radius: 50%;
   transition: background-color 0.2s ease;
 }
@@ -184,11 +209,11 @@ button:hover {
 }
 
 .creature-offspring {
-  background-color: #ffcccc; /* Light red for creature offspring */
+  background-color: #80e5e5; /* Light cyan for creature offspring */
 }
 
 .predator-offspring {
-  background-color: #add8e6; /* Light blue for predator offspring */
+  background-color: #e580e5; /* Light magenta for predator offspring */
 }
 
 .arrow {
@@ -212,6 +237,11 @@ button:hover {
   position: absolute; /* Allows positioning within the grid container */
   border-radius: 50%; /* Makes the creature a circle */
 }
+
+.predator {
+  background-color: #d100d1; /* Magenta for predators */
+}
+
 
 .food {
   position: absolute; /* Allows positioning within the grid container */
@@ -303,13 +333,13 @@ button:hover {
 @media (max-width: 768px) {
   .key-and-main-content {
     flex-direction: column;
+    align-items: center;
   }
 
   .simulation-key {
-    position: relative;
-    left: 0;
-    top: 0;
+    width: 90%;
     margin-bottom: 20px;
+    margin-right: 0;
   }
 
   .main-content {
