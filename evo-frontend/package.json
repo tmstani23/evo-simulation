@@ -7,11 +7,13 @@
     "http-proxy-middleware": "^2.0.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "cross-env HOST=localhost PORT=3001 react-scripts start",
+    "start-with-server": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd ../backend && npm start",
     "client": "cross-env HOST=localhost PORT=3001 react-scripts start",
     "build": "react-scripts build",
