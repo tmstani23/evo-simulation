@@ -2,6 +2,8 @@
 
 This project is a creature simulation where virtual creatures move within a grid environment. The simulation includes basic mechanics for movement, health management, and genetic variables.
 
+Current Live Version at: https://evo-simulation-7wqp6i5sn-tmstani23s-projects.vercel.app/
+
 ## Features
 
 - **Grid Environment:** A fixed-size grid where creatures move, find food, and interact.
