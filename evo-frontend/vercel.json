@@ -1,0 +1,17 @@
+{
+    "builds": [
+      {
+        "src": "evo-frontend/package.json",
+        "use": "@vercel/static-build",
+        "config": { "distDir": "evo-frontend/build" }
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "evo-frontend/build/$1"
+      }
+    ],
+    "ignore": ["backend/**"]
+  }
+  
