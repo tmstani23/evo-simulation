@@ -104,7 +104,7 @@ body {
 }
 
 .simulation-key .creature-color {
-  background-color: #00d1d1; /* Cyan for creatures */
+  background-color: #00a3a3; /* Darker cyan for creatures */
 }
 
 .simulation-key .predator-color {
@@ -151,6 +151,41 @@ body {
   height: 100%;
 }
 
+.tutorial-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tutorial-container h2 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.tutorial-container p {
+  margin-bottom: 20px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.tutorial-container button {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tutorial-container button:hover {
+  background-color: #2980b9;
+}
+
+
 .controls-container {
   margin-bottom: 20px;
   display: flex;
@@ -162,6 +197,25 @@ body {
 .controls-container button {
   flex: 1; /* Ensure buttons take equal space */
   margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #3498db; /* Button color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.controls-container button:hover {
+  background-color: #2980b9;
+}
+
+.sliders-container {
+  width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .sliders-container {

@@ -1,5 +1,5 @@
-// App.js
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import geneticSymbol from './images/geneticSymbol.png'; 
 import { startSimulation, stopSimulation, resetSimulation } from './simulation/SimulationLogic';
 import { generateGeneticCode } from './genetics/geneticCodeTemplate';
@@ -18,6 +18,8 @@ const App = () => {
   const [tooltip, setTooltip] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const [gridDimensions, setGridDimensions] = useState({ width: 800, height: 600 });
+
+  const navigate = useNavigate();
 
   const [geneticCodes, setGeneticCodes] = useState(
     Array.from({ length: globalVariables.creatureCount }, () => ({
@@ -51,14 +53,19 @@ const App = () => {
   const toggleDebugMode = () => setDebugMode(!debugMode);
 
   const handleStartSimulation = () => {
-    startSimulation(setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables, gridDimensions);
-    setIsSimulationRunning(true);
+    if (isPaused) {
+      setIsPaused(false); // Reset paused state
+      setIsSimulationRunning(true); // Resume simulation without resetting
+    } else {
+      startSimulation(setGeneticCodes, setPredatorCodes, setFoodItems, geneticCodesRef, predatorCodesRef, foodItemsRef, intervalRef, foodIntervalRef, globalVariables, gridDimensions);
+      setIsSimulationRunning(true);
+    }
   };
 
   const handleStopSimulation = () => {
     stopSimulation(intervalRef, foodIntervalRef);
     setIsSimulationRunning(false);
-    setIsPaused(false);
+    setIsPaused(true); // Set paused state
   };
 
   const handleResetSimulation = () => {
@@ -103,18 +110,19 @@ const App = () => {
         <h1 className="text-6xl font-bold flex-grow text-center font-poppins">EvoLife</h1>
       </header>
       <div className="key-and-main-content">
-      <div className="simulation-key">
-  <h3>Simulation Key</h3>
-  <div className="key-item"><div className="key-color creature-color"></div>Creatures</div>
-  <div className="key-item"><div className="key-color predator-color"></div>Predators</div>
-  <div className="key-item"><div className="key-color food-color"></div>Food</div>
-  <div className="key-item"><div className="key-color creature-offspring-color"></div>Creature Offspring</div>
-  <div className="key-item"><div className="key-color predator-offspring-color"></div>Predator Offspring</div>
-  <h4>Debug Mode</h4>
-  <div className="debug-item"><div className="vision-indicator"></div>Vision</div>
-  <div className="debug-item"><div className="speed-indicator"></div>Speed</div>
-  <div className="debug-item"><div className="arrow-width"></div>Arrow Width = Strength</div>
-</div>
+        <div className="simulation-key">
+          <h3>Simulation Key</h3>
+          <div className="key-item"><div className="key-color creature-color"></div>Creatures</div>
+          <div className="key-item"><div className="key-color predator-color"></div>Predators</div>
+          <div className="key-item"><div className="key-color food-color"></div>Food</div>
+          <div className="key-item"><div className="key-color creature-offspring-color"></div>Creature Offspring</div>
+          <div className="key-item"><div className="key-color predator-offspring-color"></div>Predator Offspring</div>
+          <h4>Debug Mode</h4>
+          <div className="debug-item"><div className="vision-indicator"></div>Vision</div>
+          <div className="debug-item"><div className="speed-indicator"></div>Speed</div>
+          <div className="debug-item"><div className="arrow-width"></div>Arrow Width = Strength</div>
+          <button onClick={() => { handleStopSimulation(); navigate('/tutorial'); }} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Tutorial</button>
+        </div>
         <div className="main-content">
           <div className="grid-container">
             <Grid
