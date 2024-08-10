@@ -15,7 +15,6 @@ export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems,
     setGeneticCodes(prevGeneticCodes => {
       const updatedGeneticCodes = applyHealthLoss(prevGeneticCodes, globalVariables.healthLossPerIntervalPrey)
         .map(creature => {
-          // Ensure immutability
           const newCreature = { ...creature, geneticCode: { ...creature.geneticCode, velocity: { ...creature.geneticCode.velocity } } };
           const { deltaX, deltaY } = calculateMovement(newCreature.geneticCode);
           let newX = newCreature.geneticCode.x + deltaX;
@@ -66,7 +65,6 @@ export const startSimulation = (setGeneticCodes, setPredatorCodes, setFoodItems,
     setPredatorCodes(prevPredatorCodes => {
       const updatedPredatorCodes = applyHealthLoss(prevPredatorCodes, globalVariables.healthLossPerIntervalPredator)
         .map(predator => {
-          // Ensure immutability
           const newPredator = { ...predator, geneticCode: { ...predator.geneticCode, velocity: { ...predator.geneticCode.velocity } } };
           const { deltaX, deltaY } = calculateMovement(newPredator.geneticCode);
           let newX = newPredator.geneticCode.x + deltaX;

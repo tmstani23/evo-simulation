@@ -92,6 +92,18 @@ const App = () => {
   };
 
   useEffect(() => {
+    const handleResize = () => {
+      console.log('Grid dimensions in App.js:', gridDimensions);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [gridDimensions]);
+
+  useEffect(() => {
     const currentIntervalRef = intervalRef.current;
     const currentFoodIntervalRef = foodIntervalRef.current;
 
@@ -160,10 +172,8 @@ const App = () => {
           </a>
         </div>
       </footer>
-
-
       {tooltip && (
-        <div className="creature-tooltip" style={{ top: `${tooltipPosition.top}px`, left: `${tooltipPosition.left}px` }}>
+        <div className="creature-tooltip" style={{ top: `${tooltipPosition.top}px}`, left: `${tooltipPosition.left}px` }}>
           <div>ID: {tooltip.id}</div>
           <div>Health: {tooltip.health.current}/{tooltip.health.max}</div>
           <div>Speed: {tooltip.geneticCode.velocity.speed.toFixed(2)}</div>

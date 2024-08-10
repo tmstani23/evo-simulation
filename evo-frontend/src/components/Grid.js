@@ -8,13 +8,28 @@ const Grid = ({ creatures, predators, foodItems, debugMode, onClickCreature, set
   const [tooltipContent, setTooltipContent] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
-  useEffect(() => {
+  const updateGridDimensions = () => {
     if (gridRef.current) {
-      setGridDimensions({
+      const dimensions = {
         width: gridRef.current.offsetWidth,
         height: gridRef.current.offsetHeight,
-      });
+      };
+      setGridDimensions(dimensions);
     }
+  };
+
+  useEffect(() => {
+    updateGridDimensions();
+
+    const handleResize = () => {
+      updateGridDimensions();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [setGridDimensions]);
 
   const handleMouseEnter = (e, creature) => {
